@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+        #box>div>div {
+            display: flex;
+            height: 50px;
+            width: 100vw;
+            justify-content: space-around;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        #box>div>div>img {
+            width: 150px;
+            height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <input type="checkbox" @change='btnall' v-model='isAll'>全选/全不选
+        <div>
+            <div v-for='(item,index) in list' :key='item.id'>
+                <input type="checkbox" v-model='checkList' :value='item' @change='btn'>
+                <img src="../../../流星雨/img/111.jpg" alt="">
+                <div>
+                    <p>商品：{{item.name}}</p>
+                    <p>价格：{{item.price}}</p>
+                </div>
+                <div>
+                    <button @click='item.number--' :disabled='item.number==1'>-</button>
+                    <span>{{item.number}}</span>
+                    <button @click='item.number++' :disabled='item.limit ==item.number'>+</button>
+                </div>
+                <button @click='handleClick(index,item.id)'>删除</button>
+            </div>
+        </div>
+        <p>总金额:{{sum()}}</p>
+    </div>
+    <script>
+        new Vue({
+            el: '#box',
+            data: {
+                isAll: false,
+                checkList: [],
+                list: [{ 'name': '商品1', 'price': 10, 'number': 1, 'id': 0, 'limit': '5' },
+                { 'name': '商品2', 'price': 10, 'number': 1, 'id': 1, 'limit': '10' },
+                { 'name': '商品3', 'price': 10, 'number': 1, 'id': 2, 'limit': '15' }],
+                price: 0
+            },
+            methods: {
+                sum() {
+                    var total = 0
+                    //累加计算 checkList 数组的每项的 价格*数量
+                    this.checkList.forEach(item => {
+                        total += item.price * item.number
+                    });
+                    return total
+                },
+                handleClick(index, listid) {
+                    this.list.splice(index, 1)
+                    this.checkList = this.checkList.filter(item => item.id !== listid)
+                    //同步一下状态
+                    this.btn()
+                },
+                btnall() {
+                    if (this.isAll) {
+                        this.checkList = this.list
+                    } else {
+                        this.checkList = []
+                    }
+                },
+                btn() {
+                    if (this.checkList.length == this.list.length) {
+                        this.isAll = true
+                    } else {
+                        this.isAll = false
+                    }
+                }
+            },
+        })
+    </script>
+</body>
+
+</html>

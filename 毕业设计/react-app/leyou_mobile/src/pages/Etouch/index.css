@@ -1,0 +1,37 @@
+.EtouchBox {
+    background-image: linear-gradient(to right top, #48bdff, #44b1f8, #42a5f0, #4399e7, #458dde, #3497e4, #20a1e8, #00aaeb, #00c9ea, #00e2cc, #7bf49d, #e2fd76);
+    color: white;
+    margin: 5px 0;
+}
+
+.Etouchtemperature {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.Etouchtemperature>p {
+    height: 70px;
+    width: 200px;
+    font-size: 36px;
+    text-align: center;
+}
+
+.Etouchtemperature>div {
+    height: 70px;
+    width: 70px;
+    font-size: 35px;
+    line-height: 70px;
+    text-align: center;
+}
+
+.Etouchtime {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 15px 35px;
+}
+
+.Etouchtime>p {
+    padding: 5px 0;
+}

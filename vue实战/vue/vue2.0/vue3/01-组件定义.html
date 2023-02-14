@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.next.js"></script>
+</head>
+
+<body>
+    <div id="box">
+        {{myname}}
+        <navbar :yourname="yourname"></navbar>
+    </div>
+    <script>
+        var obj = {
+            data() {
+                return {
+                    myname: '小唐',
+                    yourname: '小周'
+                }
+            }
+        }
+        var app = Vue.createApp(obj)
+        app.component('navbar', {
+            props: ["yourname"],
+            template: `
+                <div>
+                    小唐牛逼！
+                    {{yourname}}
+                </div>
+            `,
+            created() {
+                console.log('created')
+            },
+            mounted() {
+                console.log('mounted');
+            }
+        })
+        app.mount('#box')
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+body {
+    // background-color: #bfa;
+    display: flex;
+}
+
+.box {
+    width: 360px;
+    height: 420px;
+    box-sizing: border-box;
+    border: 10px solid #000;
+    border-radius: 5%;
+    background-color: #b7d4a8;
+}
+
+.box .box_square {
+    box-sizing: border-box;
+    width: 304px;
+    height: 304px;
+    border: 2px solid #000;
+    margin: 10px auto;
+}
+
+.box .integral div {
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px;
+    font-weight: 1000;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.box .box_square #snake {
+    position: relative;
+}
+
+.box .box_square #snake div {
+    width: 10px;
+    height: 10px;
+    background: #000;
+    box-sizing: border-box;
+    border: 1px solid #b7d4a8;
+    position: absolute;
+}
+
+.box .box_square .food {
+    display: flex;
+    position: relative;
+}
+
+.box .box_square .food>div {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    left: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.box .box_square .food>div>div {
+    width: 4.5px;
+    height: 4.5px;
+    transform: rotate(45deg);
+    background: #000;
+    border-radius: 1px;
+}

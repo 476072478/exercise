@@ -1,0 +1,10 @@
+{
+  "navigationBarTitleText": "动态详情",
+  "navigationBarBackgroundColor": "#FFFFFF",
+  "navigationBarTextStyle": "black",
+  "backgroundColor": "#FFFFFF",
+  "usingComponents": {
+    "pic-blur": "/components/pic-blur/pic-blur",
+    "comment": "/components/comment"
+  }
+}

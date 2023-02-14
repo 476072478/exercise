@@ -1,0 +1,59 @@
+.DetailsUl {
+    position: relative;
+    margin-top: 70px;
+    bottom: 60px;
+}
+
+.DetailsLi {
+    margin: 15px auto;
+    width: 95%;
+    height: 240px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 0px 3px #3A3232;
+}
+
+.DetailsLi>div:nth-child(1) {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    height: 160px;
+    width: 100%;
+}
+
+.DetailsLi>div:nth-child(1)>img {
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    width: 100%;
+}
+
+.DetailsText {
+    flex: 0.3;
+    display: flex;
+    justify-content: space-between;
+}
+
+.DetailsText>div {
+    padding: 5px 15px;
+}
+
+.Detailsname,
+.Detailsprice {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.Detailsjieshao,
+.Detailsposition {
+    width: 185px;
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.Detailsfraction {
+    height: 25px;
+    line-height: 25px;
+}

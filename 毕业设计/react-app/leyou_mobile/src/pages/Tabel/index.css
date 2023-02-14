@@ -1,0 +1,124 @@
+.Tabelbottom {
+    position: relative;
+}
+
+.TabelImg {
+    position: relative;
+    width: 100vw;
+    height: 100vw;
+}
+
+.TabelImg img {
+    width: 100vw;
+    height: 100vw;
+}
+
+.customIndicator {
+    width: 50px;
+    height: 25px;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    background: #4d5057;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+    line-height: 25px;
+    border-radius: 5px;
+}
+
+.TabelName {
+    box-sizing: border-box;
+    width: 100%;
+    height: 105px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.TabelName {
+    font-size: 18px;
+}
+
+.TabelName .NameBox {
+    width: 100px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 16px;
+    line-height: 40px;
+    text-align: center;
+    border: 1px solid #9e9e9e;
+}
+
+.TabelRanking {
+    box-sizing: border-box;
+    width: 90vw;
+    height: 50px;
+    background: #fff6ef;
+    border-radius: 10px;
+    margin: 0 auto;
+    font-size: 18px;
+    line-height: 50px;
+    padding: 0px 75px;
+}
+
+.TabelPosition {
+    box-sizing: border-box;
+    width: 90vw;
+    height: 40px;
+    margin: 20px auto;
+    display: flex;
+}
+
+.TabelPosition div {
+    box-sizing: border-box;
+    height: 40px;
+    line-height: 40px;
+    padding: 0px 18px;
+    background: #f6f7fb;
+    border-radius: 5px;
+}
+
+.TabelPosition div:nth-child(2) {
+    margin-left: 5px;
+}
+
+.TabelSign {
+    width: 90vw;
+    font-size: 18px;
+    margin: 0 auto;
+    font-weight: 600;
+}
+
+.Text {
+    transition: all 0.2s linear;
+    height: 180px;
+}
+
+.TabelText {
+    font-size: 15px;
+    margin: 17px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.TabelTextactive {
+    font-size: 15px;
+    margin: 17px;
+    overflow: hidden;
+}
+
+.Tabelheight {
+    text-align: center;
+}
+
+.TabelLike {
+    width: 90vw;
+    margin: 0 auto;
+}
+
+hr {
+    width: 90vw;
+    margin: 30px auto;
+}

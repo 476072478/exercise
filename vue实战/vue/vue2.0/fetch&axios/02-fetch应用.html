@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+        li {
+            overflow: hidden;
+            list-style: none;
+            padding: 10px;
+        }
+
+        li.img {
+            fLoat: right;
+            width: .100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <button @click='handClick'>点击</button>
+        <ul>
+            <li v-for='item in datalist' :key='item.id'>
+                {{item.name}}
+                <img :src='item.poster' alt="">
+                <ul>
+                    <li v-for='item in item.actors'>
+                        {{item.name}}
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <script>
+        new Vue({
+            el: "#box",
+            data: {
+                datalist: {},
+            },
+            methods: {
+                handClick() {
+                    fetch('./json/dianying.json').then(res => res.json()).then(res => { this.datalist = res.data.films })
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>

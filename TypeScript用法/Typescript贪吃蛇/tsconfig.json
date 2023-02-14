@@ -1,0 +1,8 @@
+{
+    "compilerOptions": {
+        "module": "ES2015",
+        "target": "ES2015",
+        "strict": true,
+        "outDir": "./dist", //指定编译后的文件位置// 将代码合并为一个文件,两个ts代码合并到一起
+    }
+}

@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- <div id="a">
+        <div id="b">
+            <div id="c"></div>
+        </div>
+    </div>
+    <button onclick="anniu()">click</button> -->
+    <style>
+        /* #a {
+            width: 300px;
+            height: 300px;
+            background: pink;
+        }
+
+        #b {
+            width: 200px;
+            height: 200px;
+            background: blue;
+        }
+
+        #c {
+            width: 100px;
+            height: 100px;
+            background: yellow;
+        } */
+    </style>
+    <script>
+        // function myPromise(context) {
+        //     this.status = 'pending'
+        //     this.value = null
+        //     this.fail = null
+        //     this.arr = []
+        //     this.loserCallbacl = []
+        //     let self = this
+        //     function resolve(value) {
+        //         if (self.status === 'pending') {
+        //             self.value = value
+        //             status = 'ending'
+        //         }
+        //     }
+        //     function reject(value) {
+        //         if (self.status === 'pending') {
+        //             self.fail = value
+        //             self.loserCallbacl.forEach(item => item(value))
+        //             status = 'ending'
+        //         }
+        //     }
+        //     context && context(resolve, reject)
+        // }
+        // myPromise.prototype.then = function (success, loser) {
+        //     let result1
+        //     if (this.value) {
+        //         result1 = success(this.value)
+        //     }
+        //     if (this.fail) {
+        //         result1 = loser(this.fail)
+        //     }
+        //     if (result1) {
+        //         if (typeof result1 === 'object') {
+        //             return result1
+        //         } else {
+        //             return new myPromise((resolve, reject) => {
+        //                 if (result1 === null || result1 === undefined) {
+        //                     reject(result1)
+        //                 } else {
+        //                     resolve(result1)
+        //                 }
+        //             })
+        //         }
+        //     }
+        //     if (this.status === 'pending') this.arr.push(success)
+        //     if (this.status === 'pending') this.loserCallbacl.push(loser)
+        // }
+        // let result = new myPromise((resolve, reject) => {
+        //     setTimeout(() => {
+        //         resolve(1234)
+        //     }, 2000)
+        // })
+        // result.then(res => {
+        //     return 3
+        // })
+
+        // function My() {
+        //     this.name = '小唐'
+        //     this.age = 21
+
+        //     Static
+        // }
+        // let obj = {
+        //     sex: '男'
+        // }
+        // My.bind(obj)
+        // const callback = new My()
+        // console.log(callback)
+
+        // const arr = [1, [2, 3], [4, [5, [6]], 7]]
+        // function myflat(arr) {
+        //     let result = []
+        //     for (let i = 0; i < arr.length; i++) {
+        //         if (Array.isArray(arr[i])) {
+        //             result = result.concat(myflat(arr[i]))
+        //         } else {
+        //             result.push(arr[i])
+        //         }
+        //     }
+        //     return result
+        // }
+        // console.log(myflat(arr))
+
+
+        //深度遍历
+        // const person = {
+        //     name: '小唐',
+        //     arr: [1, 2, 3],
+        //     er: {
+        //         name: '小周',
+        //         age: 17
+        //     }
+        // }
+        // function copeperson(obj) {
+        //     if (typeof obj !== 'object' || obj == null) {
+        //         return obj
+        //     }
+        //     let result
+        //     if (Array.isArray(obj)) {
+        //         result = []
+        //     } else {
+        //         result = {}
+        //     }
+        //     for (let i in obj) {
+        //         result[i] = copeperson(obj[i])
+        //     }
+        //     return result
+        // }
+
+
+        // var a = document.getElementById("a"),
+        //     b = document.getElementById("b"),
+        //     c = document.getElementById("c");
+        // a.onclick = function () {
+        //     console.log(this)
+        // }
+        // var person = {
+        //     name: '小唐',
+        //     age: 21,
+        //     sex: 0
+        // }
+        // function fn(a, b, c) {
+        //     console.log(this.name, a, b, c)
+        // }
+        // //手写call
+        // Function.prototype.mycall = function (context, ...next) {
+        //     context = context || window
+        //     context.fn = this
+        //     context.fn(...next)
+        // }
+        // //手写apply
+        // Function.prototype.myapply = function (context, next) {
+        //     context = context || window
+        //     context.fn = this
+        //     context.fn(...next)
+        // }
+        // //手写bind
+        // Function.prototype.mybind = function (context, ...next) {
+        //     context = context || window
+        //     context.fn = this
+        //     return function () {
+        //         context.fn(...next)
+        //     }
+        // }
+        // fn.mybind(person, 1, 2, 3)()
+
+        // var person = {
+        //     name: '小唐',
+        //     age: 21,
+        //     sex: 0
+        // }
+        // window.onload
+        // console.log(Object.keys(person))
+
+
+        // const arr = [1, [2, 3], [4, [5, [6]], 7]]
+        // function flatArr(arr) {
+        //     let length = arr.length
+        //     let result = []
+        //     for (let i = 0; i < length; i++) {
+        //         if (Array.isArray(arr[i])) {
+        //             result = result.concat(flatArr(arr[i]))
+        //         } else {
+        //             result.push(arr[i])
+        //         }
+        //     }
+        //     return result
+        // }
+        // const result = flatArr(arr)
+
+
+        // function add() {
+        //     let arg = [...arguments]
+        //     let inner = function () {
+        //         arg.push(...arguments)
+        //         return inner
+        //     }
+        //     inner.toString = function () {
+        //         return '141564165'
+        //     }
+        //     return inner
+        // }
+        // console.log(add(1)(2)(3)(4))
+
+
+        // var a = document.getElementById("a"),
+        //     b = document.getElementById("b"),
+        //     c = document.getElementById("c");
+        // c.addEventListener("click", function (event) {
+        //     // 冒泡阶段
+        //     console.log("c1");
+        //     event.stopImmediatePropagation()
+        // });
+        // // c.addEventListener("click", function (event) {
+        // //     // 捕获阶段
+        // //     console.log("c2");
+        // // }, true);
+        // // b.addEventListener("click", function (event) {
+        // //     // 捕获阶段
+        // //     console.log("b1");
+        // // }, true);
+        // // b.addEventListener("click", function (event) {
+        // //     // 冒泡阶段
+        // //     console.log("b2");
+        // //     event.stopImmediatePropagation();
+        // // });
+        // // a.addEventListener("click", function (event) {
+        // //     // 捕获阶段
+        // //     console.log("a1");
+        // //     event.stopImmediatePropagation();
+        // // }, true);
+        // a.addEventListener("click", function (event) {
+        //     // 冒泡阶段
+        //     console.log(event.target.id)
+        // });
+        // a.addEventListener("click", function (event) {
+        //     // 捕获阶段
+        //     console.log("a3");
+        //     // event.stopImmediatePropagation();
+        // }, true);
+        // a.addEventListener("click", function (event) {
+        //     // 捕获阶段
+        //     console.log("a4");
+        // }, true);
+        //对象创建正则表达式
+        // let inputUser = document.querySelector('.content')
+        // let con = prompt('请输入要检测的内容')
+        // let reg = new RegExp(con, 'g')
+        // inputUser.innerHTML = inputUser.innerHTML.replace(reg, res => { return `<span style ='color:red'>${con}</span>` })
+
+        //选择符
+        // let reg = /^(010|020)\-\d{7,8}$/
+        // let tel = '010-9999999'
+        // console.log(reg.test(tel))
+
+        //转义
+        // let price = 23.34
+        // let reg = /\d+\.\d+/
+        // console.log(reg.test(price))
+
+        //字符串边界约束
+        // let hd = '5ddadad41513f'
+        // console.log(/^\d/.test(hd))
+
+        //数值和空白原字符
+        // let hd = 'xiaotang2021a2021'
+        // let reg = /\d+/g
+        // console.log(hd.match(reg))
+        // let hd = `
+        // 张三：010-999999999，李四:020-99999999
+        // `
+        // let reg = /\d+\-\d+/g
+        // console.log(hd.match(reg))
+
+        //w与W原字符
+        // let email = '476072478@qq.com'
+        // console.log(email.match(/^\w+@\w+\.\w+/))
+
+        // let allhtml = document.querySelectorAll('*')
+        // let arr = [...allhtml].map(item => item.tagName)
+        // let result = arr.reduce((prevState, newState) => {
+        //     if (!prevState.includes(newState)) {
+        //         prevState.push(newState)
+        //     }
+        //     return prevState
+        // }, [])
+        // console.log(result)
+
+
+        // function fangdou(fn, time) {
+        //     let flag = null
+        //     return () => {
+        //         if (flag) {
+        //             clearTimeout(flag)
+        //         }
+        //         flag = setTimeout(fn, time)
+        //     }
+        // }
+
+
+        // function jieliu(fn, time) {
+        //     let flag = null
+        //     return () => {
+        //         if (!flag) {
+        //             flag = setTimeout(() => {
+        //                 fn()
+        //                 flag = null
+        //             }, time)
+        //         }
+        //     }
+        // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // const arr = [1, 2, 3, 4, 5]
+        // // let result = arr.map((item, index, arr) => {
+        // //     // console.log(item, index, arr)
+        // //     return arr
+        // // })
+        // // const result = arr.filter((item, index, arr) => {
+        // //     return item != undefined
+        // // })
+        // // console.log(result)
+        // // console.log(undefined == null)
+
+        // // const res1 = arr.some((item, index, arr) => { return item % 2 === 0 })
+        // // const res2 = arr.every((item, index, arr) => { return item % 2 === 0 })
+        // // console.log(res1, res2)
+        // const result = arr.reduce((prevstate, newstate, index, arr) => {
+        //     return prevstate + newstate
+        // })
+
+
+        // var sum = [{ x: 1 }, { x: 2 }, { x: 3 }]
+        // const result1 = sum.reduce((pervstate, newstate) => pervstate + newstate.x, 0)
+
+
+        // var flattened = [[0, 1], [2, 3], [4, 5]]
+        // let result2 = flattened.reduce((prevstate, newstate) => {
+        //     return prevstate.concat(newstate)
+        // })
+
+        // var names = ['Alice', 'Bob', 'Tom', 'Bruce', 'Alice']
+        // let result3 = names.reduce((prevstate, newstate) => {
+        //     if (newstate in prevstate) {
+        //         prevstate[newstate]++
+        //     } else {
+        //         prevstate[newstate] = 1
+        //     }
+        //     return prevstate
+        // }, {})
+
+        // let peoples = [{ name: 'Alice', age: 21 }, { name: 'Bob', age: 20 }, { name: 'Jane', age: 20 }]
+        // let result4 = peoples.reduce((prevstate, newstate) => {
+        //     if (newstate.age in prevstate) {
+        //         prevstate[newstate.age].push(newstate)
+        //     } else {
+        //         prevstate[newstate.age] = [newstate]
+        //     }
+        //     return prevstate
+        // }, {})
+
+        // let arr = [1, 2, 3, 3, 1, 5, 4, 6, 4, 2]
+        // const result = arr.reduce((prevState, newState) => {
+        //     if (!prevState.includes(newState)) {
+        //         prevState.push(newState)
+        //     }
+        //     return prevState
+        // }, [])
+
+
+        // var strStr = function (haystack, needle) {
+        //     const n = haystack.length, m = needle.length;
+        //     for (let i = 0; i <= n; i++) {
+        //         let flag = true;
+        //         for (let j = 0; j < m; j++) {
+        //             if (haystack[i + j] != needle[j]) {
+        //                 flag = false;
+        //                 break;
+        //             }
+        //         }
+        //         if (flag) {
+        //             return i;
+        //         }
+        //     }
+        //     return -1;
+        // };
+        // var strStr = function (haystack, needle) {
+        //     if (haystack.length < needle.length) return -1
+        //     let flag = false
+        //     for (let i = 0; i < haystack.length; i++) {
+        //         if (haystack[i] === needle[0]) {
+        //             flag = true
+        //             for (let j = 0; j < needle.length; j++) {
+        //                 if (haystack[i + j] !== needle[j]) {
+        //                     flag = false
+        //                     break
+        //                 }
+        //             }
+        //             if (flag === true) return i
+        //         }
+        //     }
+        //     return -1
+        // };
+        // console.log(strStr("mississippi", "mississippi"))
+
+
+        // var merge = function (intervals) {
+        //     const arr = intervals.reduce((prevState, newState) => {
+        //         let newarr = [...prevState, ...newState]
+        //         return newarr
+        //     }, [])
+        //     let n = arr.length
+        //     for (let i = 0; i < n; i++) {
+        //         if (i % 2 !== 0) {
+        //             if (arr[i] >= arr[i + 1]) {
+        //                 arr.splice(i, 2)
+        //                 i - 1
+        //             }
+        //         }
+        //     }
+        //     let newarr = []
+        //     for (let j = 0; j < arr.length; j++) {
+        //         if (j % 2 !== 0) {
+        //             newarr.push([arr[j], arr[j - 1]])
+        //         }
+        //     }
+        //     return newarr
+        // };
+        // console.log(merge([[1, 4], [4, 5]]))
+
+
+        // let str = '1234'
+        // console.log(str[false])
+        // console.log(str[NaN])
+        // console.log(str[undefined])
+        // let sr = { name: 'xt', age: 18, sex: 1 }
+        // console.log(str.split(''))
+
+
+        // let hd = 'xiaotang2001time0216u'
+        // let a = 'u'
+        // //用a的u去匹配hd
+        // // console.log(eval(`/${a}/`).test(hd))
+        // let reg = new RegExp(a, 'g')
+        // console.log(reg.test(hd))
+        // console.log(document.cookie)
+
+
+        // async function big() {
+        //     console.log(1)
+        //     let two = await Promise.resolve(123)
+        //     console.log(two)
+        //     console.log(2)
+        //     console.log(3)
+        //     return Promise.resolve(4)
+        // }
+        // big().then(res => console.log(res))
+
+        // var addTwoNumbers = function (l1, l2) {
+        //     let newnumber = 0
+        //     let more = l1.length > l2.length ? l2.length : l1.length
+        //     for (let i = 0; i < more; i++) {
+        //         newnumber += ((l1[i] + l2[i]) * Math.pow(10, i))
+        //     }
+        //     let data = newnumber.toString().split('')
+        //     return data
+        // };
+        // l1 = [2, 4, 3], l2 = [5, 6, 4]
+        // console.log(addTwoNumbers(l1, l2))
+        // var lengthOfLongestSubstring = function (s) {
+        //     let mylength = s.length
+        //     let arr = []
+        //     let j = 0
+        //     let maxlength = 0
+        //     for (let i = 0; i < mylength; i++) {
+        //         if (i !== 0) {
+        //             arr.shift()
+        //         }
+        //         while (j < mylength && !arr.includes(s[j])) {
+        //             arr.push(s[j])
+        //             j++
+        //         }
+        //         maxlength = Math.max(maxlength, arr.length)
+        //     }
+        //     return maxlength
+        // };
+        // console.log(lengthOfLongestSubstring(" "))
+
+        // var findMedianSortedArrays = function (nums1, nums2) {
+        //     let arr = nums1.concat(nums2)
+        //     arr.sort((a, b) => {
+        //         return a - b
+        //     })
+        //     let newnumber
+        //     if (arr.length % 2 === 0) {
+        //         newnumber = (arr[Math.floor(arr.length / 2)] + arr[Math.ceil(arr.length / 2)]) / 2
+        //     } else {
+        //         newnumber = arr[Math.floor(arr.length / 2)]
+        //     }
+        //     return newnumber
+        // };
+        // console.log(findMedianSortedArrays([1, 2], [3, 4]))
+
+        // var findMedianSortedArrays = function (nums1, nums2) {
+        //     let mylength = nums1.length + nums2.length
+        //     let k = Math.ceil(((nums1.length + nums2.length) / 2))
+        //     let mynumber = Math.floor(k / 2) - 1
+        //     while (k > 1) {
+        //         if (nums1[mynumber] > nums2[mynumber]) {
+        //             console.log('执行了1', nums1[mynumber], nums2[mynumber])
+        //             nums2.splice(0, mynumber + 1)
+        //         }
+        //         if (nums1[mynumber] <= nums2[mynumber]) {
+        //             console.log('执行了2', nums1[mynumber], nums2[mynumber])
+        //             nums1.splice(0, mynumber + 1)
+        //         }
+        //         k = k - Math.floor(k / 2)
+        //         mynumber = Math.floor(k / 2) - 1
+        //         console.log(k)
+        //     }
+        //     while (nums1.length < 2) {
+        //         nums1.push(Number.MAX_SAFE_INTEGER)
+        //     }
+        //     while (nums2.length < 2) {
+        //         nums2.push(Number.MAX_SAFE_INTEGER)
+        //     }
+        //     console.log(nums1, nums2)
+        //     if (mylength % 2 !== 0) {
+        //         return nums1[0] < nums2[0] ? nums1[0] : nums2[0]
+        //     } else {
+        //         return Math.min(((nums1[0] + nums2[0]) / 2), ((nums1[0] + nums1[1]) / 2), ((nums2[0] + nums2[1]) / 2))
+        //     }
+        // };
+        // console.log(findMedianSortedArrays([1, 2],
+        //     [-1, 3]))
+
+
+
+        // var convert = function (s, numRows) {
+        //     if (s.length < numRows || numRows === 1) {
+        //         return s
+        //     }
+        //     let newarr = new Array(numRows)
+        //     let direction = true
+        //     let m = -1
+        //     for (let i = 0; i < numRows; i++) {
+        //         newarr[i] = []
+        //     }
+        //     for (let j = 0; j < s.length; j++) {
+        //         if (direction) {
+        //             m++
+        //         }
+        //         if (!direction) {
+        //             m--
+        //         }
+        //         newarr[m].push(s[j])
+        //         if (j % (numRows - 1) === 0 && j !== 0) {
+        //             direction = !direction
+        //         }
+        //     }
+        //     for (let k = 0; k < numRows; k++) {
+        //         newarr[k] = newarr[k].join(',')
+        //     }
+        //     console.log(newarr)
+        // };
+        // convert('AB', 1)
+
+
+        // var reverse = function (x) {
+        //     let start = 0
+        //     let prev = 0
+        //     while (x !== 0) {
+        //         start = x % 10
+        //         prev = prev * 10 + start
+        //         x = parseInt(x / 10)
+        //         if (prev < Math.pow(-2, 31) || prev > Math.pow(2, 31) - 1) {
+        //             console.log(prev, '执行了')
+        //             return 0
+        //         }
+        //     }
+        //     return prev
+        // };
+        // console.log(reverse(-123))
+
+
+        // var myAtoi = function (s) {
+        //     let mystr = ''
+        //     let mynumber = 0
+        //     for (let i = 0; i < s.length; i++) {
+        //         if (i === 0 && s.charAt(i) === ' ') {
+        //             s = s.slice(1)
+        //             i--
+        //         } else if (((s.charAt(i) === '-' || s.charAt(i) === '+') && s.charAt(i - 1) === '') || !isNaN(Number(s.charAt(i))) && s.charAt(i) !== ' ') {
+        //             mystr += s.charAt(i)
+        //         }
+        //         else {
+        //             return addmethods(mystr)
+        //         }
+        //     }
+        //     function addmethods(data) {
+        //         if (Number(mystr) < Math.pow(-2, 31)) {
+        //             return Math.pow(-2, 31)
+        //         }
+        //         if (Number(mystr) > Math.pow(2, 31) - 1) {
+        //             return Math.pow(2, 31) - 1
+        //         }
+        //         return isNaN(Number(mystr)) ? 0 : Number(mystr)
+        //     }
+        //     return addmethods(mystr)
+        // };
+        // console.log(myAtoi("42"))
+        // console.log(isNaN(Number('')))
+
+
+
+        // var maxArea = function (height) {
+        //     let leftIndex = 0
+        //     let rightIndex = height.length - 1
+        //     let maxnumber = 0
+        //     for (let i = 0; i < (height.length - 2); i++) {
+        //         // maxnumber = Math.max(maxnumber, (rightIndex - leftIndex) * Math.ceil(height[leftIndex], height[rightIndex]))
+        //         // height[leftIndex] <= height[rightIndex] ? leftIndex++ : rightIndex--
+        //         // console.log(maxnumber, leftIndex, rightIndex)
+        //         console.log((rightIndex - leftIndex) * Math.min(height[leftIndex], height[rightIndex]))
+        //     }
+        //     return maxnumber
+        // };
+        // console.log(maxArea([1, 8, 6, 2, 5, 4, 8, 3, 7]))
+
+        // var intToRoman = function (num) {
+        //     const mapdata = new Map([['I', 1], ['V', 5], ['X', 10], ['L', 50], ['C', 100], ['D', 500], ['M', 1000]])
+        //     for (let [i, key] of mapdata) {
+        //         console.log(i, key)
+        //     }
+        // };
+        // intToRoman()
+
+
+        // var longestCommonPrefix = function (strs) {
+        //     let newarrt = strs[0].split('')
+        //     for (let i = 1; i < strs.length; i++) {
+        //         for (let j = 0; j < Math.min(strs[i].length, newarrt.length); j++) {
+        //             if (newarrt[j] !== strs[i][j]) {
+        //                 newarrt.splice(j)
+        //                 continue
+        //             }
+        //         }
+        //     }
+        //     return newarrt.join('')
+        // };
+        // console.log(longestCommonPrefix(["flower", "flow", "flight"]))
+
+
+
+        // var threeSum = function (nums) {
+        //     nums.sort((a, b) => a - b)
+        //     let arr = []
+        //     for (let i = 0; i < nums.length; i++) {
+        //         if (nums[i] > 0) break
+        //         if (nums[i] === nums[i - 1]) {
+        //             continue
+        //         }
+        //         let leftIndex = i + 1
+        //         let rightIndex = nums.length - 1
+        //         while (leftIndex < rightIndex) {
+        //             let addNumber = nums[i] + nums[leftIndex] + nums[rightIndex]
+        //             if (addNumber === 0) {
+        //                 arr.push([nums[i], nums[leftIndex], nums[rightIndex]])
+        //                 while (leftIndex < rightIndex && nums[leftIndex] === nums[leftIndex + 1]) {
+        //                     leftIndex++
+        //                 }
+        //                 while (leftIndex < rightIndex && nums[rightIndex] === nums[rightIndex - 1]) {
+        //                     rightIndex--
+        //                 }
+        //                 leftIndex++
+        //                 rightIndex--
+        //             }
+        //             else if (addNumber < 0) {
+        //                 leftIndex++
+        //             }
+        //             else if (addNumber > 0) {
+        //                 rightIndex--
+        //             }
+        //         }
+        //     }
+        //     return arr
+        // };
+
+        // console.log(threeSum([-4, -2, -2, -2, 0, 1, 2, 2, 2, 3, 3, 4, 4, 6, 6]))
+
+
+        // var threeSumClosest = function (nums, target) {
+        //     nums.sort((a, b) => a - b)
+        //     let leng = nums.length
+        //     if (leng == 3) {
+        //         return (nums[0] + nums[1] + nums[2])
+        //     }
+        //     let near = nums[0] + nums[1] + nums[leng - 1]
+        //     for (let i = 0; i < leng; i++) {
+        //         let L = i + 1
+        //         let R = leng - 1
+        //         while (L < R) {
+        //             let add = nums[i] + nums[L] + nums[R]
+        //             near = Math.abs((add - target)) < Math.abs((near - target)) ? add : near
+        //             add < target ? L++ : R--
+        //         }
+        //     }
+        //     return near
+        // };
+        // console.log(threeSumClosest([0, 1, 2], 3))
+
+        // // function dda(adad) {
+        // //     console.log(123)
+        // //     if (true) {
+        // //         return 123
+        // //     }
+        // //     console.log(234)
+        // // }
+        // // dda()
+
+
+        // const myMap = new Map([[0, '0'], [2, '2']])
+        // console.log(myMap.has(2))
+
+
+
+
+        // var letterCombinations = (digits) => {
+        //     const mymap = { '2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl', '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz' }
+        //     let arr = []
+        //     if (digits === '') return arr
+        //     function flashback(str, index) {
+        //         let IndexStr = mymap[digits.charAt(index)]
+        //         if (index > digits.length - 1) {
+        //             arr.push(str)
+        //         } else {
+        //             for (let i = 0; i < IndexStr.length; i++) {
+        //                 flashback(str + IndexStr[i], 1 + index)
+        //             }
+        //         }
+        //     }
+        //     flashback('', 0)
+        //     return arr
+        // };
+        // letterCombinations('23')
+
+        // var fourSum = function (nums, target) {
+        //     nums.sort((a, b) => a - b)
+        //     console.log(nums)
+        //     let arr = []
+        //     for (let i = 0; i < nums.length - 1; i++) {
+        //         if (i > 0 && nums[i] === nums[i - 1]) {
+        //             continue
+        //         }
+        //         for (let j = i + 1; j < nums.length - 2; j++) {
+        //             if (j > i + 1 && nums[j] === nums[j - 1]) {
+        //                 continue
+        //             }
+        //             let L = j + 1
+        //             let R = nums.length - 1
+        //             while (L < R) {
+        //                 let addnums = nums[i] + nums[j] + nums[L] + nums[R]
+        //                 if (addnums === target) {
+        //                     arr.push([nums[i], nums[j], nums[L], nums[R]])
+        //                     while (nums[L] === nums[L + 1]) L++
+        //                     while (nums[R] === nums[R - 1]) R--
+        //                     L++
+        //                     R--
+        //                 } else {
+        //                     addnums < target ? L++ : R--
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     return arr
+        // };
+        // console.log(fourSum([-1, 0, 1, 2, -1, -4], -1))
+
+
+        // var isValid = function (s) {
+        //     let myMap = new Map([
+        //         [')', '('],
+        //         ['}', '{'],
+        //         [']', '[']
+        //     ])
+        //     let arr = []
+        //     for (let i of s) {
+        //         if (myMap.has(i)) {
+        //             if (myMap.get(i) == arr[arr.length - 1]) {
+        //                 arr.pop()
+        //             } else {
+        //                 return false
+        //             }
+        //         } else {
+        //             arr.push(i)
+        //         }
+        //     }
+        //     return arr.length === 0 ? true : false
+        // };
+        // console.log(isValid('()'))
+        // let arr = new ListNode()
+
+        // var generateParenthesis = function (n) {
+        //     const arr = []
+        //     function dfs(index, L, R, str) {
+        //         if (index === n) {
+        //             arr.push(str)
+        //         }
+        //         if (L < n) {
+        //             dfs(index, L++, R, str += "(")
+        //         }
+        //         if (L > R) {
+        //             dfs(index++, L, R++, str += ")")
+        //         }
+        //     }
+        //     dfs(0, 0, 0, '')
+        //     return arr
+        // };
+        // generateParenthesis(1)
+
+
+
+        // var removeDuplicates = function (nums) {
+        //     for (let i = 0; i < nums.length; i++) {
+        //         if (i > 0 && nums[i] === nums[i - 1]) {
+        //             nums.splice(i, 1)
+        //             i--
+        //         }
+        //     }
+        //     console.log(nums)
+        //     return nums
+        // };
+        // removeDuplicates([1, 1, 2,2,4,4,8,9])
+
+
+        // var divide = function (dividend, divisor) {
+        //     let newarr = Math.abs(dividend).toString().split('')
+        //     let mynum = ''
+        //     let add = ''
+        //     for (let i = 0; i < newarr.length; i++) {
+        //         mynum += newarr[i]
+        //         let m = ''
+        //         while (Number(mynum) > Math.abs(divisor)) {
+        //             if (m === '') {
+        //                 m = 0
+        //             }
+        //             mynum = (Number(mynum) - Math.abs(divisor)).toString()
+        //             m++
+        //         }
+        //         add = add + m
+        //     }
+        //     if ((dividend < 0 && divisor < 0) || (dividend > 0 && divisor > 0)) {
+        //         //符号相同，结果为正
+        //         return Number(add)
+        //     } else {
+        //         // 符号不同，结果为负
+        //         return -Number(add)
+        //     }
+        // };
+        // console.log('结果', divide(10, 3))
+
+
+        // var nextPermutation = function (nums) {
+        //     for (let i = nums.length - 1; i > 0; i--) {
+        //         if (nums[i] > nums[i - 1]) {
+        //             let mynum = nums[i - 1]
+        //             let minnum = nums[i]
+        //             let Index = i
+        //             for (let j = i + 1; j < nums.length; j++) {
+        //                 if (nums[j] > mynum && nums[j] < minnum) {
+        //                     minnum = nums[j]
+        //                     Index = j
+        //                 }
+        //             }
+        //             nums[i - 1] = minnum
+        //             nums[Index] = mynum
+        //             for (let m = i; m < nums.length; m++) {
+        //                 for (let n = m + 1; n < nums.length; n++) {
+        //                     if (nums[m] > nums[n]) {
+        //                         let sortnum = nums[m]
+        //                         nums[m] = nums[n]
+        //                         nums[n] = sortnum
+        //                         console.log(nums)
+        //                     }
+        //                 }
+        //             }
+        //             return nums
+        //         }
+        //     }
+        //     return nums.sort((a, b) => a - b)
+        // };
+        // console.log(nextPermutation([100, 99, 98, 97, 96, 95, 94, 93, 92, 91, 90, 89, 88, 87, 86, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 71, 70, 69, 68, 67, 66, 65, 64, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1])
+        // )
+
+
+        // var longestValidParentheses = function (s) {
+        //     let max = 0
+        //     for (let i = 0; i < s.length; i++) {
+        //         let arr = []
+        //         let add = 0
+        //         if (s[i] === '(') {
+        //             for (let j = i; j < s.length; j++) {
+        //                 console.log(i, j)
+        //                 if (s[j] === '(') {
+        //                     arr.push(s[j])
+        //                 }
+        //                 if (s[j] === ')' && arr.length !== 0) {
+        //                     add = add + 2
+        //                     arr.pop()
+        //                 } else if (s[j] === ')' && arr.length === 0) {
+        //                     break
+        //                 }
+        //                 if (j === s.length - 1 && s[j] === ')') {
+        //                     add = add - (arr.length * 2)
+        //                 }
+        //             }
+        //             max = max > add ? max : add
+        //         }
+        //     }
+        //     return max
+        // };
+        // console.log(longestValidParentheses("(())("))
+
+
+
+        // var longestValidParentheses = function (s) {
+        //     let R = s.length - 1
+        //     let check = true
+        //     while (check) {
+        //         if (s[0] !== ')' && s[R] !== '(') {
+        //             check = false
+        //         }
+        //         if (s[0] === ')') {
+        //             s = s.slice(1)
+        //             R--
+        //         }
+        //         if (s[R] === '(') {
+        //             s = s.slice(0, s.length - 1)
+        //             R--
+        //         }
+        //     }
+        //     console.log(s)
+        //     let max = 0
+        //     for (let i = 0; i < s.length; i++) {
+        //         let arr = []
+        //         let add = 0
+        //         if (s[i] === '(') {
+        //             for (let j = i; j < s.length; j++) {
+        //                 if (s[j] === '(') {
+        //                     arr.push(s[j])
+        //                 }
+        //                 if (s[j] === ')' && arr.length !== 0) {
+        //                     add = add + 2
+        //                     arr.pop()
+        //                 } else if (s[j] === ')' && arr.length === 0) {
+        //                     break
+        //                 }
+        //                 if (j === s.length - 1) {
+        //                     console.log(arr)
+        //                     add = add - (arr.length * 2)
+        //                 }
+        //             }
+        //             max = max > add ? max : add
+        //         }
+        //     }
+        //     console.log(max)
+        //     return max
+        // };
+
+        // longestValidParentheses("((()()(()((()")
+
+
+
+        // var search = function (nums, target) {
+        //     let L = 0
+        //     let R = nums.length - 1
+        //     while (L <= R) {
+        //         let middle = Math.floor(L + (R - L) / 2)
+        //         if (nums[middle] === target) {
+        //             return middle
+        //         }
+        //         if (nums[0] < target) {
+        //             // target在旋转后的左半部分
+        //             if (nums[middle] > nums[0] && nums[middle] < target) {
+        //                 // 中间点在旋转后的左半部分,target在中间点的右半部分
+        //                 L = middle + 1
+        //             } else {
+        //                 // 中间点在旋转后的右半部分，那么target一定在中间点的左半部分 || 中间点在旋转后的左，target在中间点的左
+        //                 R = middle - 1
+        //             }
+        //         } else {
+        //             // target在旋转后的右半部分
+        //             if (nums[middle] < nums[0] && nums[middle] > target) {
+        //                 // 只有一种情况向左走，中间点也在旋转后的右部分，target在中间点的左部分
+        //                 R = middle - 1
+        //             } else {
+        //                 L = middle + 1
+        //             }
+        //         }
+        //     }
+        //     return -1
+        // };
+        // console.log(search([1, 3], 3))
+
+
+        // var searchRange = function (nums, target) {
+        //     let L = 0
+        //     let R = nums.length
+        //     while (L < R) {
+        //         let middle = Math.floor(L + (R - L) / 2)
+        //         if (nums[middle] === target) {
+        //             if (nums[middle] === nums[middle - 1]) {
+        //                 return [middle - 1, middle]
+        //             }
+        //             if (nums[middle] === nums[middle + 1]) {
+        //                 return [middle, middle + 1]
+        //             }
+        //             return [middle, middle]
+        //         }
+        //         if (nums[middle] < target) {
+        //             L = middle + 1
+        //         }
+        //         if (nums[middle] > target) {
+        //             R = middle - 1
+        //         }
+        //     }
+        //     return [-1, -1]
+        // };
+        // console.log(searchRange([1], 1))
+
+
+
+        let myVue = function (name, fn) {
+            this.name = name
+            // this.fn = fn
+        }
+        myVue.prototype.$emit = function (data) {
+        }
+        myVue.prototype.$on = function (data) {
+        }
+        // myVue.prototype.$parent = function () {
+        //     return this.fn
+        // }
+        myVue.prototype.$eventBus = new myVue()
+        let Vue1 = new myVue('Vue1')
+        let Vue2 = new myVue('Vue2')
+        // Vue2.$eventBus.$emit('eventName', 1)
+        Vue2.$eventBus.$emit('eventName')
+        Vue1.$eventBus.$on()
+    </script>
+</body>
+
+</html>

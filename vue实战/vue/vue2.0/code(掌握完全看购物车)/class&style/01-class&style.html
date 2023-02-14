@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="..//lib/vue.js"></script>
+    <style>
+        .aa {
+            font-size: 50px;
+        }
+
+        .bb {
+            color: red;
+        }
+
+        .cc {
+            background: yellow;
+        }
+
+        .dd {
+            height: 180px;
+        }
+
+        .ff {
+            line-height: 180px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <div :class="classobj">动态切换class-1-对象</div>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: '#box',
+            data: {
+                classobj: {
+                    aa: true,
+                    bb: true,
+                    cc: true,
+                    dd: false
+                }
+            }
+            //vue2 解决方案 Vue.set(对象，属性，true)
+        })
+    </script>
+</body>
+
+</html>

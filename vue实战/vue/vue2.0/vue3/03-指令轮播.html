@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <script src="lib/swiper-7.4.1/swiper/swiper-bundle.js"></script>
+    <link rel="stylesheet" href="lib/swiper-7.4.1/swiper/swiper-bundle.css">
+</head>
+
+<body>
+    <header>导航</header>
+    <div class="swiper xiaotang" style="height:500px">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide" v-for='(item,index) in datalist' v-hello="{
+                index:index,
+                datalist:datalist.length
+            }">{{item}}</div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+
+        <!-- 如果需要导航按钮 -->
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div>
+
+        <!-- 如果需要滚动条 -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+    </div>
+    <footer>底部内容</footer>
+    <script>
+        Vue.directive('hello', {
+            inserted(el, item) {
+                if (item.value.index == item.value.datalist - 1) {
+                    new Swiper('.swiper', {
+                        autoplay: {
+                            delay: 2500,
+                            disableOnInteraction: false,
+                        },
+                        pagination: {
+                            el: '.swiper-pagination',
+                        },
+                        navigation: {
+                            nextEl: '.swiper-button-next',
+                            prevEl: '.swiper-button-prev',
+                        },
+                    })
+                }
+            }
+        })
+        new Vue({
+            el: '.xiaotang',
+            data: {
+                datalist: []
+            },
+            mounted() {
+                setTimeout(() => {
+                    this.datalist = ['aaa', 'bbb', 'cccc']
+                }, 2000)
+            }
+        })
+    </script>
+</body>
+
+</html>

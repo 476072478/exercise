@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="lib/vue.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .xiaotang-enter-active {
+            background: red;
+            animation: aaa 1.5s;
+        }
+
+        .xiaotang-leave-active {
+            background: yellow;
+            animation: aaa 1.5s reverse;
+        }
+
+        @keyframes aaa {
+            0% {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="box">
+        <navbar>
+            <button @click="chouti">click</button>
+        </navbar>
+        <transition enter-active-class="xiaotang-enter-active" leave-active-class="xiaotang-leave-active">
+            <div v-show="bbqn">
+                111111111111111111111
+            </div>
+        </transition>
+        <transition name="xiaotang" appear>
+            <div v-if="bbqn">
+                222222222222222222222
+            </div>
+        </transition>
+    </div>
+    <script>
+        Vue.component('navbar', {
+            template: `
+                <div style='background:yellow'>
+                navbar- <slot></slot>
+                </div>
+            `
+        })
+        Vue.component('navul', {
+            template: `
+                <ul style='width:200px;height:600px'>
+                    <li>首页</li>
+                    <li>钱包</li>
+                    <li>设置</li>
+                </ul>
+            `
+        })
+        new Vue({
+            el: '#box',
+            data: {
+                bbqn: true
+            },
+            methods: {
+                chouti() {
+                    this.bbqn = !this.bbqn
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
