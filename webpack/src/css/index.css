@@ -1,0 +1,22 @@
+#box1 {
+    display: flex;
+    width: 300px;
+    height: 300px;
+    background: yellow;
+    background-image: url(../imgs/blue_checked_bg.png);
+    background-size: 100% 100%;
+}
+#box2 {
+    width: 300px;
+    height: 300px;
+    background: yellow;
+    background-image: url(../imgs/blue_checked_up_bg.png);
+    background-size: 100% 100%;
+}
+#box3 {
+    width: 300px;
+    height: 300px;
+    background: yellow;
+    background-image: url(../imgs/blue_diamond.png);
+    background-size: 100% 100%;
+}
