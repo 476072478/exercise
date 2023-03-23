@@ -171,6 +171,21 @@ export default {
             name: "类型",
             type: "bar",
             data: this.echartsdata,
+            itemStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                  {
+                    offset: 0,
+                    color: "#248ff7",
+                  },
+                  {
+                    offset: 1,
+                    color: "#6851f1",
+                  },
+                ]),
+                barBorderRadius: 12,
+              },
+            },
           },
         ],
       });
@@ -182,6 +197,11 @@ export default {
 };
 </script>
 <style scoped>
+.box-card{
+  /* border: 2px solid rgb(31,255,200); */
+  background: #DCDFE6;
+  color: black;
+}
 .myhomeeachrs {
   padding: 30px;
 }

@@ -1,8 +1,8 @@
 <template>
-  <div v-if="tableData.length !== 0" style="height: 100%; position: relative">
+  <div v-if="tableData.length !== 0" style="height: 100%; position: relative" class="table">
     <el-table
       :data="tableData[showpage]"
-      style="width: 100%; max-height: 75%"
+      style="width: 100%; max-height: 75%;"
       @row-click="gotodetails"
     >
       <el-table-column prop="id" label="id"> </el-table-column>
@@ -74,5 +74,15 @@ export default {
   position: absolute;
   bottom: 50px;
   right: 130px;
+}
+::deep .el-table th.el-table__cell {
+  background-color: none;
+}
+.table >>> .el-table tr {
+  background: #99a9bf;
+  cursor: pointer;
+}
+.table >>> .el-table td.el-table__cell, .el-table th.el-table__cell.is-leaf{
+  border-bottom: 0px;
 }
 </style>

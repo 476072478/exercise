@@ -1,28 +1,41 @@
 <template>
   <div id="app">
-    <LoginNumber />
+    <!-- <LoginNumber />
     <LoginSituation />
     <RyczNumber />
     <BusinessSituation />
-    <BusinessRanger/>
+    <BusinessRanger/> -->
+    <CScomputed :monitor="monitor" @change="change"/>
   </div>
 </template>
 
 <script>
-import LoginNumber from "./mycomponents/LoginNumber.vue";
-import LoginSituation from "./mycomponents/LoginSituation.vue";
-import BusinessSituation from "./mycomponents/BusinessMySituation.vue";
-import RyczNumber from "./mycomponents/RyczNumber.vue";
-import BusinessRanger from "./mycomponents/BusinessRanger.vue";
+// import LoginNumber from "./mycomponents/LoginNumber.vue";
+// import LoginSituation from "./mycomponents/LoginSituation.vue";
+// import BusinessSituation from "./mycomponents/BusinessMySituation.vue";
+// import RyczNumber from "./mycomponents/RyczNumber.vue";
+// import BusinessRanger from "./mycomponents/BusinessRanger.vue";
+import CScomputed from './test/CScomputed.vue';
 export default {
   name: "App",
   components: {
-    LoginNumber,
-    LoginSituation,
-    RyczNumber,
-    BusinessSituation,
-    BusinessRanger
+    // LoginNumber,
+    // LoginSituation,
+    // RyczNumber,
+    // BusinessSituation,
+    // BusinessRanger
+    CScomputed
   },
+  data(){
+    return{
+      monitor:100000
+    }
+  },
+  methods:{
+    change(val){
+      this.monitor = val
+    }
+  }
 };
 </script>
 

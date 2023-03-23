@@ -20,7 +20,7 @@
     ></vue-particles>
     <div class="LoginFilter"></div>
     <div class="LoginConter">
-      <div class="Logintext">新闻发布系统</div>
+      <div class="Logintext">乐游武侯小程序管理系统</div>
       <el-form
         :model="ruleForm"
         status-icon
@@ -88,9 +88,18 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           adminLogin(this.ruleForm).then((res) => {
-            if (res.status === 200) {
+            if (res.data.status !== 1) {
               this.$store.dispatch("setadmininfo", res.data);
               this.$router.push("/home");
+              this.$message({
+                message: res.data.message,
+                type: "success",
+              });
+            } else {
+              this.$message({
+                message: res.data.message,
+                type: "error",
+              });
             }
           });
         } else {
@@ -106,7 +115,7 @@ export default {
 </script>
 <style scoped>
 .LoginStyle {
-  background: rgb(241,243,242);
+  background: #324057;
   height: 100vh;
   width: 100vw;
 }
@@ -133,6 +142,9 @@ export default {
 }
 
 .Logintext {
+  position: relative;
+  left: -10px;
+  width: 540px;
   text-align: center;
   color: white;
   font-size: 30px;
@@ -151,11 +163,14 @@ export default {
 }
 .mybutton {
   text-align: center;
+  position: relative;
+  left: -10px;
+  width: 540px;
 }
 .mybutton button {
   width: 120px;
 }
-.LoginConter >>> .el-form-item__label{
-  color:white
+.LoginConter >>> .el-form-item__label {
+  color: white;
 }
 </style>

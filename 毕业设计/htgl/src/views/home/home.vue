@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-header>
-      Header
+      乐游武侯小程序管理系统
       <div>
         <div>
           <el-avatar
@@ -17,7 +17,7 @@
             <el-dropdown-item>{{
               this.$store.state.adminInfo.adminjob
             }}</el-dropdown-item>
-            <el-dropdown-item command="a">退出登录</el-dropdown-item>
+            <el-dropdown-item command="outlogin">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
     outLogin(command) {
-      if (command === "a") {
+      if (command === "outlogin") {
         this.$store.dispatch("deleteadmininfo");
         this.$router.push("/login");
       }
@@ -60,7 +60,6 @@ export default {
   },
 };
 </script>
-
 
 <style lang="scss">
 * {
@@ -71,9 +70,9 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #cbcfd4;
+  color: white;
   line-height: 60px;
-  background-color: #324057;
+  background: #324057;
   font-size: 25px;
   div {
     font-size: 15px;
@@ -86,7 +85,7 @@ export default {
 }
 
 .el-aside {
-  background-color: #ffffff;
+  background-color:#324057;
   color: #333;
   text-align: center;
   line-height: 200px;
@@ -108,10 +107,10 @@ export default {
     box-sizing: border-box;
     padding: 10px;
     overflow-y: scroll;
+    border: 1px solid rgb(23,75,120,0.4);
   }
 }
 .el-container {
   height: 90vh;
 }
 </style>
-

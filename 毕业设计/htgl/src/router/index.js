@@ -80,4 +80,11 @@ const VueRouterPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(to) {
   return VueRouterPush.call(this, to).catch(err => err)
 }
+router.beforeEach((to,from,next)=>{
+  if(to.path !== '/login'){
+    localStorage.getItem('admintoken') && next()
+  }else{
+    next()
+  }
+}) 
 export default router

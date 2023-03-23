@@ -207,7 +207,7 @@ export default {
         addUserRoute(newrouteData).then(() => {
           this.getrouter();
           this.$message({
-            message: "恭喜你，添加成功",
+            message: "添加成功路径成功",
             type: "success",
           });
         });
