@@ -5,7 +5,7 @@
     <RyczNumber />
     <BusinessSituation />
     <BusinessRanger/> -->
-    <CScomputed :monitor="monitor" @change="change"/>
+    <CScomputed/>
   </div>
 </template>
 

@@ -12,7 +12,7 @@ function createElm(vnode) {
     return vnode.el //从根虚拟节点创建真实节点
 }
 export function patch(oldVnode, vnode) {
-    const isRealElement = oldVnode.nodeType // 如果有说明他是一个元素
+    const isRealElement = oldVnode && oldVnode.nodeType // 如果有说明他是一个元素
     if (isRealElement) {
         const oldElm = oldVnode
         // 需要获取父节点，将当前节点的下一个元素作为参照物将他插入，之后删除老节点
@@ -20,6 +20,7 @@ export function patch(oldVnode, vnode) {
         let el = createElm(vnode)
         parentNode.insertBefore(el,oldElm.nextSibling)
         parentNode.removeChild(oldElm)
+        return el
     } else {
         // diff算法
     }

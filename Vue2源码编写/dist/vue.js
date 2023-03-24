@@ -313,6 +313,38 @@
     };
   });
 
+  var id$1 = 0;
+  var Dep = /*#__PURE__*/function () {
+    function Dep() {
+      _classCallCheck(this, Dep);
+      this.id = id$1++; //属性的dep要收集watcher
+      this.subs = []; //这里存放
+    }
+    _createClass(Dep, [{
+      key: "depend",
+      value: function depend() {
+        // 这里我们不希望放重复的wacher，而且刚才只是一个单向的关系
+        // watcher记录dep
+        // this.subs.push(Dep.target)
+        Dep.target.addDep(this); //让watcher记住dep
+      }
+    }, {
+      key: "addSub",
+      value: function addSub(watcher) {
+        this.subs.push(watcher);
+      }
+    }, {
+      key: "notify",
+      value: function notify() {
+        this.subs.forEach(function (watcher) {
+          return watcher.update();
+        }); //告诉watcher要更新了
+      }
+    }]);
+    return Dep;
+  }();
+  Dep.target = null;
+
   var Observe = /*#__PURE__*/function () {
     function Observe(data) {
       _classCallCheck(this, Observe);
@@ -352,17 +384,24 @@
   function defineReactive(target, key, value) {
     //闭包
     observe(value); //对所有对象都进行属性劫持
+    var dep = new Dep(); //每一个属性都有一个dep
     Object.defineProperty(target, key, {
       get: function get() {
+        if (Dep.target) {
+          dep.depend(); //让这个属性的收集器记住当前过程
+        }
+
         return value;
       },
       set: function set(newvalue) {
         if (value === newvalue) return;
         observe(newvalue);
         value = newvalue;
+        dep.notify(); //通知更新
       }
     });
   }
+
   function observe(data) {
     // 对这个对象进行劫持
     if (_typeof(data) !== "object" || data === null) {
@@ -406,6 +445,45 @@
     observe(data);
   }
 
+  var id = 0;
+  var Watcher = /*#__PURE__*/function () {
+    function Watcher(vm, fn, options) {
+      _classCallCheck(this, Watcher);
+      // 不同组件有不同watcher
+      this.id = id++;
+      this.renderWatcher = options; //是一个渲染过程
+      this.getter = fn; // getter意味着调用这个函数会发生取值操作
+      this.deps = []; //后续我们实现计算属性和清理工作会用到
+      this.depsId = new Set();
+      this.get();
+    }
+    _createClass(Watcher, [{
+      key: "get",
+      value: function get() {
+        Dep.target = this; //静态属性只有一份
+        this.getter(); //会去vm上取值
+        Dep.target = null;
+      }
+    }, {
+      key: "addDep",
+      value: function addDep(dep) {
+        //一个组件对应多个属性，重复的属性也不用记录
+        var id = dep.id;
+        if (!this.depsId.has(id)) {
+          this.deps.push(dep);
+          this.depsId.add(id); //watcher已经记住dep，并且已经去重
+          dep.addSub(this);
+        }
+      }
+    }, {
+      key: "update",
+      value: function update() {
+        this.get();
+      }
+    }]);
+    return Watcher;
+  }(); // 需要给每个属性增加一个dep，目的就是收集watcher
+
   function createElement(vm, tag) {
     var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
     for (var _len = arguments.length, children = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
@@ -447,7 +525,7 @@
   }
 
   function patch(oldVnode, vnode) {
-    var isRealElement = oldVnode.nodeType; // 如果有说明他是一个元素
+    var isRealElement = oldVnode && oldVnode.nodeType; // 如果有说明他是一个元素
     if (isRealElement) {
       var oldElm = oldVnode;
       // 需要获取父节点，将当前节点的下一个元素作为参照物将他插入，之后删除老节点
@@ -455,6 +533,7 @@
       var el = createElm(vnode);
       parentNode.insertBefore(el, oldElm.nextSibling);
       parentNode.removeChild(oldElm);
+      return el;
     }
   }
   // 每次更新页面的话，dom结果是不会变的，我调用render方法时，数据变化了会根据数据渲染成新的虚拟节点，用新的虚拟节点渲染dom
@@ -496,7 +575,9 @@
       // 需要调用生成的render函数获取到虚拟节点 -》 生成真实的dom
       vm._update(vm._render());
     };
-    updataComponent(); //如果稍后数据变化，也调用这个函数重新执行
+    var wathce = new Watcher(vm, updataComponent, true);
+    console.log(wathce);
+    //如果稍后数据变化，也调用这个函数重新执行
     // 观察者模式
   }
 

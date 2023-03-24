@@ -12,12 +12,6 @@
 <body>
     <div id="box" class="mybox" userdiy="userdiy" style="color:yellow;background:red">
         {{name}} : {{age}} 岁
-        <p>
-            {{address.content}} : {{address.num}} 岁
-        </p>
-        <span>
-            芜湖 ：18 岁
-        </span>
     </div>
     <script src="./vue.js"></script>
     <script>
@@ -36,6 +30,9 @@
             },
             el:'#box',
         })
+        setTimeout(() => {
+            vm.age = 22
+        }, 1000);
     </script>
 </body>
 
