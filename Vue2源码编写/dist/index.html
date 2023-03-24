@@ -10,9 +10,14 @@
 </head>
 
 <body>
-    <div id="box" class="mybox" userdiy="userdiy">
-        {{name}}
-        {{age}}
+    <div id="box" class="mybox" userdiy="userdiy" style="color:yellow;background:red">
+        {{name}} : {{age}} 岁
+        <p>
+            {{address.content}} : {{address.num}} 岁
+        </p>
+        <span>
+            芜湖 ：18 岁
+        </span>
     </div>
     <script src="./vue.js"></script>
     <script>
@@ -20,7 +25,7 @@
         const vm = new Vue({
             data() { //代理数据
                 return {
-                    name: 'zf',
+                    name: '唐帝',
                     age: 20,
                     address: {
                         num: 30,

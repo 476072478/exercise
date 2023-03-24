@@ -1,5 +1,6 @@
 import { compileToFunction } from "./compiler/index";
 import { initState } from "./state";
+import {mountComponent} from './lifecycle'
 export function initMixin(Vue) {
     Vue.prototype._init = function (options) {
         //用于初始化操作
@@ -34,6 +35,7 @@ export function initMixin(Vue) {
                 ops.render = render
             }
         }
-        ops.render;
+        //将实例挂载到el上
+        mountComponent(vm,el)
     };
 }
