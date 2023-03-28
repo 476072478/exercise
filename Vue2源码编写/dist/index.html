@@ -10,30 +10,24 @@
 </head>
 
 <body>
-    <div id="box" class="mybox" userdiy="userdiy" style="color:yellow;background:red">
-        {{name}} : {{age}} 岁
+    <div id="box" class="mybox" style="color:yellow;background:red">
+        {{arr}}
     </div>
     <script src="./vue.js"></script>
     <script>
+        let box = document.querySelector('#box')
         //  响应式数据变化，数据变化了可以监控
         const vm = new Vue({
             data() { //代理数据
                 return {
-                    name: '唐帝',
-                    age: 20,
-                    address: {
-                        num: 30,
-                        content: '啦啦啦'
-                    },
-                    arr:[0,{a:1},2]
+                    arr:[1,2,3]
                 }
             },
             el:'#box',
         })
-        setTimeout(() => {
-            vm.age = 22
-        }, 1000);
-    </script>
+        vm.arr[0] = 100
+        vm.arr.push(100)
+    </script>   
 </body>
 
 </html>

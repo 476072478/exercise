@@ -309,6 +309,8 @@
       if (inserted) {
         ob.observeArray(inserted);
       }
+      // 走到这里
+
       return result;
     };
   });
@@ -348,6 +350,7 @@
   var Observe = /*#__PURE__*/function () {
     function Observe(data) {
       _classCallCheck(this, Observe);
+      this.dep = new Dep();
       Object.defineProperty(data, '__ob__', {
         value: this,
         enumerable: false // 不可枚举
@@ -445,6 +448,74 @@
     observe(data);
   }
 
+  var queeu = [];
+  var has = {};
+  var pending = false; //防抖
+
+  function flushSchedulerQueue() {
+    var flushQueue = queeu.slice(0);
+    queeu = [];
+    has = {};
+    pending = false;
+    flushQueue.forEach(function (q) {
+      return q.run();
+    }); //在刷新的过程中可能还有新的watcher，重新放到queue中
+  }
+
+  var callbacks = [];
+  var waiting = false;
+  function flushCallbacks() {
+    waiting = false;
+    var cbs = callbacks.slice(0);
+    callbacks = [];
+    cbs.forEach(function (cb) {
+      return cb();
+    });
+  }
+  // nextTick采用的是优雅降级的方式
+  var timeFunc;
+  if (Promise) {
+    timeFunc = function timeFunc() {
+      Promise.resolve().then(flushCallbacks);
+    };
+  } else if (MutationObserver) {
+    var observer = new MutationObserver(flushCallbacks);
+    var textNode = createTextNode(1);
+    observer.observe(textNode, {
+      characterData: true
+    });
+    timeFunc = function timeFunc() {
+      textNode.textContent = 2;
+    };
+  } else if (setImmediate) {
+    timeFunc = function timeFunc() {
+      setImmediate(flushCallbacks);
+    };
+  } else {
+    setTimeout(function () {
+      flushCallbacks();
+    }, 0);
+  }
+  function nextTick(cb) {
+    //先内部的还是先用户的？
+    callbacks.push(cb);
+    if (!waiting) {
+      timeFunc(); //最后一起刷新
+    }
+  }
+
+  function queueWatcher(watcher) {
+    var id = watcher.id;
+    if (!has[id]) {
+      queeu.push(watcher);
+      has[id] = true;
+      // 不管update执行多少次，但是最终只执行一次
+      if (!pending) {
+        nextTick(flushSchedulerQueue);
+        pending = true;
+      }
+    }
+  }
   var id = 0;
   var Watcher = /*#__PURE__*/function () {
     function Watcher(vm, fn, options) {
@@ -478,6 +549,12 @@
     }, {
       key: "update",
       value: function update() {
+        queueWatcher(this); //把当前的watcher暂存起来
+        // this.get()
+      }
+    }, {
+      key: "run",
+      value: function run() {
         this.get();
       }
     }]);
@@ -491,7 +568,7 @@
     }
     return vnode(vm, tag, data, children, data.key, null);
   }
-  function createTextNode(vm, text) {
+  function createTextNode$1(vm, text) {
     return vnode(vm, null, null, null, null, text);
   }
   function vnode(vm, tag, data, children, key, text) {
@@ -544,7 +621,7 @@
       return createElement.apply(void 0, [this].concat(Array.prototype.slice.call(arguments)));
     };
     Vue.prototype._v = function () {
-      return createTextNode.apply(void 0, [this].concat(Array.prototype.slice.call(arguments)));
+      return createTextNode$1.apply(void 0, [this].concat(Array.prototype.slice.call(arguments)));
     };
     Vue.prototype._s = function (value) {
       //将数据转化成字符串，因为使用变量对应的结果可能是一个对象
@@ -575,8 +652,7 @@
       // 需要调用生成的render函数获取到虚拟节点 -》 生成真实的dom
       vm._update(vm._render());
     };
-    var wathce = new Watcher(vm, updataComponent, true);
-    console.log(wathce);
+    new Watcher(vm, updataComponent, true);
     //如果稍后数据变化，也调用这个函数重新执行
     // 观察者模式
   }
@@ -623,6 +699,7 @@
   function Vue(options) {
     this._init(options);
   }
+  Vue.prototype.$nextTick = nextTick;
   initMixin(Vue); //扩展了init方法
   lifeCycleMixin(Vue);
 

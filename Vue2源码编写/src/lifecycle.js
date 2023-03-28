@@ -37,8 +37,7 @@ export function mountComponent(vm, el) {
         // 需要调用生成的render函数获取到虚拟节点 -》 生成真实的dom
         vm._update(vm._render())
     }
-    const wathce = new Watcher(vm,updataComponent,true) 
-    console.log(wathce)
+    new Watcher(vm,updataComponent,true) 
     //如果稍后数据变化，也调用这个函数重新执行
     // 观察者模式
 }

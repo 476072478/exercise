@@ -2,6 +2,9 @@ import { newArrayProto } from './array'
 import Dep from './dep'
 class Observe {
   constructor(data) {
+
+    this.dep = new Dep()
+
     Object.defineProperty(data, '__ob__', {
       value: this,
       enumerable: false // 不可枚举
@@ -26,7 +29,7 @@ class Observe {
 }
 export function defineReactive(target, key, value) {
   //闭包
-  observe(value); //对所有对象都进行属性劫持
+  let childob = observe(value); //对所有对象都进行属性劫持
   let dep = new Dep() //每一个属性都有一个dep
   Object.defineProperty(target, key, {
     get() {

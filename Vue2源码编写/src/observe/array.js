@@ -29,6 +29,8 @@ methods.forEach(method => {
         if(inserted){
             ob.observeArray(inserted)
         }
+        // 走到这里
+        
         return result
     }
 }) 
