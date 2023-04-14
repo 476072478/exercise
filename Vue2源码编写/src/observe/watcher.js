@@ -1,4 +1,4 @@
-import Dep from './dep'
+import Dep, { popTarget, pushTarget } from './dep'
 
 let queeu = []
 let has = {}
@@ -35,11 +35,11 @@ if (Promise) {
     timeFunc = () => {
         textNode.textContent = 2
     }
-}else if(setImmediate){
-    timeFunc = ()=>{
+} else if (setImmediate) {
+    timeFunc = () => {
         setImmediate(flushCallbacks)
     }
-}else{
+} else {
     setTimeout(() => {
         flushCallbacks()
     }, 0);
@@ -71,12 +71,21 @@ class Watcher {
         this.getter = fn // getter意味着调用这个函数会发生取值操作
         this.deps = [] //后续我们实现计算属性和清理工作会用到
         this.depsId = new Set()
-        this.get()
+        this.lazy = options.lazy
+        this.dirty = this.lazy //缓存
+        this.vm = vm
+        this.value = ''
+        this.lazy ? undefined : this.get()
+    }
+    evaluate() {
+        this.value = this.get()
+        this.dirty = false
     }
     get() {
-        Dep.target = this //静态属性只有一份
-        this.getter() //会去vm上取值
-        Dep.target = null
+        pushTarget(this) //静态属性只有一份
+        let value = this.getter.call(this.vm) //会去vm上取值
+        popTarget()
+        return value
     }
     addDep(dep) { //一个组件对应多个属性，重复的属性也不用记录
         let id = dep.id
@@ -86,9 +95,19 @@ class Watcher {
             dep.addSub(this)
         }
     }
+    depend(){
+        let i = this.deps.length
+        while(i--){
+            this.deps[i].depend() //让计算属性watcher也收集渲染过程
+        }
+    }
     update() {
-        queueWatcher(this) //把当前的watcher暂存起来
-        // this.get()
+        if(this.lazy){
+            //如果是计算属性,依赖的值变化了，就标值计算属性是脏值
+            this.dirty = true
+        }else{
+            queueWatcher(this) //把当前的watcher暂存起来
+        }
     }
     run() {
         this.get()

@@ -6,7 +6,7 @@ export function initMixin(Vue) {
         //用于初始化操作
         const vm = this;
         vm.$options = options; //将用户的选项挂载到实例上
-        // 初始化状态
+        // 初始化状态，初始化计算属性，watcher
         initState(vm);
         // todo...
         if (options.el) {

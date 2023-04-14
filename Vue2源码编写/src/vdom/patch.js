@@ -1,26 +1,40 @@
 function createElm(vnode) {
-    let { tag, data, children, text } = vnode
-    if (typeof tag === 'string') { //元素
-        vnode.el = document.createElement(tag) //后续我们需要diff算法，拿虚拟节点比对后更新dom
-        children.forEach(children => {
+    let { tag, data, children, text } = vnode;
+    if (typeof tag === "string") {
+        //元素
+        vnode.el = document.createElement(tag); //后续我们需要diff算法，拿虚拟节点比对后更新dom
+        patchProps(vnode.el, data);
+        children.forEach((children) => {
             // 递归渲染
-            vnode.el.appendChild(createElm(children))
-        })
-    } else { //文本
-        vnode.el = document.createTextNode(text)
+            vnode.el.appendChild(createElm(children));
+        });
+    } else {
+        //文本
+        vnode.el = document.createTextNode(text);
     }
-    return vnode.el //从根虚拟节点创建真实节点
+    return vnode.el; //从根虚拟节点创建真实节点
+}
+function patchProps(el, props) {
+    for (let key in props) {
+        if (key === "style") {
+            for (let styleName in props[key]) {
+                el.style[styleName] = props.style[styleName];
+            }
+        } else {
+            el.setAttribute(key, props[key]);
+        }
+    }
 }
 export function patch(oldVnode, vnode) {
-    const isRealElement = oldVnode && oldVnode.nodeType // 如果有说明他是一个元素
+    const isRealElement = oldVnode && oldVnode.nodeType; // 如果有说明他是一个元素
     if (isRealElement) {
-        const oldElm = oldVnode
+        const oldElm = oldVnode;
         // 需要获取父节点，将当前节点的下一个元素作为参照物将他插入，之后删除老节点
-        const parentNode = oldElm.parentNode
-        let el = createElm(vnode)
-        parentNode.insertBefore(el,oldElm.nextSibling)
-        parentNode.removeChild(oldElm)
-        return el
+        const parentNode = oldElm.parentNode;
+        let el = createElm(vnode);
+        parentNode.insertBefore(el, oldElm.nextSibling);
+        parentNode.removeChild(oldElm);
+        return el;
     } else {
         // diff算法
     }

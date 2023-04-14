@@ -310,7 +310,7 @@
         ob.observeArray(inserted);
       }
       // 走到这里
-
+      ob.dep.notify(); //数组变化了，通知对应的watcher实现更新
       return result;
     };
   });
@@ -345,13 +345,23 @@
     }]);
     return Dep;
   }();
+  var stack = [];
+  function pushTarget(watcher) {
+    stack.push(watcher);
+    Dep.target = watcher;
+  }
+  function popTarget() {
+    stack.pop();
+    Dep.target = stack[stack.length - 1];
+  }
   Dep.target = null;
 
   var Observe = /*#__PURE__*/function () {
     function Observe(data) {
       _classCallCheck(this, Observe);
-      this.dep = new Dep();
-      Object.defineProperty(data, '__ob__', {
+      this.dep = new Dep(); //所有对象都要增加dep
+
+      Object.defineProperty(data, "__ob__", {
         value: this,
         enumerable: false // 不可枚举
       });
@@ -384,16 +394,29 @@
     }]);
     return Observe;
   }();
+  function dependArray(value) {
+    for (var i = 0; i < value.length; i++) {
+      value[i].__ob__ && value[i].__ob__.dep.depend();
+      if (Array.isArray(value[i])) {
+        dependArray(value[i]);
+      }
+    }
+  }
   function defineReactive(target, key, value) {
     //闭包
-    observe(value); //对所有对象都进行属性劫持
+    var childob = observe(value); //对所有对象都进行属性劫持
     var dep = new Dep(); //每一个属性都有一个dep
     Object.defineProperty(target, key, {
       get: function get() {
         if (Dep.target) {
           dep.depend(); //让这个属性的收集器记住当前过程
+          if (childob) {
+            childob.dep.depend();
+            if (Array.isArray(value)) {
+              dependArray(value);
+            }
+          }
         }
-
         return value;
       },
       set: function set(newvalue) {
@@ -416,36 +439,6 @@
     }
     // 如果一个对象已经被劫持，那么就不用被劫持
     return new Observe(data);
-  }
-
-  function initState(vm) {
-    // 对数据进行劫持
-    var opts = vm.$options;
-    if (opts.data) {
-      initData(vm);
-    }
-  }
-  function Proxy(vm, target, key) {
-    // 使用时候的劫持
-    Object.defineProperty(vm, key, {
-      get: function get() {
-        return vm[target][key];
-      },
-      set: function set(newvalue) {
-        vm[target][key] = newvalue;
-      }
-    });
-  }
-  function initData(vm) {
-    // 对data进行劫持
-    var data = vm.$options.data;
-    data = typeof data == "function" ? data.call(vm) : data;
-    vm._data = data;
-    // 将vm.data 用vm代理
-    for (var key in data) {
-      Proxy(vm, "_data", key);
-    }
-    observe(data);
   }
 
   var queeu = [];
@@ -526,14 +519,25 @@
       this.getter = fn; // getter意味着调用这个函数会发生取值操作
       this.deps = []; //后续我们实现计算属性和清理工作会用到
       this.depsId = new Set();
-      this.get();
+      this.lazy = options.lazy;
+      this.dirty = this.lazy; //缓存
+      this.vm = vm;
+      this.value = '';
+      this.lazy ? undefined : this.get();
     }
     _createClass(Watcher, [{
+      key: "evaluate",
+      value: function evaluate() {
+        this.value = this.get();
+        this.dirty = false;
+      }
+    }, {
       key: "get",
       value: function get() {
-        Dep.target = this; //静态属性只有一份
-        this.getter(); //会去vm上取值
-        Dep.target = null;
+        pushTarget(this); //静态属性只有一份
+        var value = this.getter.call(this.vm); //会去vm上取值
+        popTarget();
+        return value;
       }
     }, {
       key: "addDep",
@@ -547,10 +551,22 @@
         }
       }
     }, {
+      key: "depend",
+      value: function depend() {
+        var i = this.deps.length;
+        while (i--) {
+          this.deps[i].depend(); //让计算属性watcher也收集渲染过程
+        }
+      }
+    }, {
       key: "update",
       value: function update() {
-        queueWatcher(this); //把当前的watcher暂存起来
-        // this.get()
+        if (this.lazy) {
+          //如果是计算属性,依赖的值变化了，就标值计算属性是脏值
+          this.dirty = true;
+        } else {
+          queueWatcher(this); //把当前的watcher暂存起来
+        }
       }
     }, {
       key: "run",
@@ -560,6 +576,74 @@
     }]);
     return Watcher;
   }(); // 需要给每个属性增加一个dep，目的就是收集watcher
+
+  function initState(vm) {
+    // 对数据进行劫持
+    var opts = vm.$options;
+    if (opts.data) {
+      initData(vm);
+    }
+    if (opts.computed) {
+      initComputed(vm);
+    }
+  }
+  function Proxy(vm, target, key) {
+    // 使用时候的劫持
+    Object.defineProperty(vm, key, {
+      get: function get() {
+        return vm[target][key];
+      },
+      set: function set(newvalue) {
+        vm[target][key] = newvalue;
+      }
+    });
+  }
+  function initData(vm) {
+    // 对data进行劫持
+    var data = vm.$options.data;
+    data = typeof data == "function" ? data.call(vm) : data;
+    vm._data = data;
+    // 将vm.data 用vm代理
+    for (var key in data) {
+      Proxy(vm, "_data", key);
+    }
+    observe(data);
+  }
+  function initComputed(vm) {
+    var computed = vm.$options.computed;
+    var watchers = vm.computedWatcher = {}; //将计算属性watcher保存到vm上
+    for (var key in computed) {
+      var userDef = computed[key];
+      // 我们需要监控计算属性中get的变化
+      var fn = typeof userDef === 'function' ? userDef : userDef.get;
+      watchers[key] = new Watcher(vm, fn, {
+        lazy: true
+      });
+      defineComputed(vm, key, userDef);
+    }
+  }
+  function defineComputed(target, key, userDef) {
+    var setter = userDef.set || function () {};
+    Object.defineProperty(target, key, {
+      get: createComputedGeeter(key),
+      set: setter
+    });
+  }
+  function createComputedGeeter(key) {
+    // 我们需要监测是否要执行这个getter
+    return function () {
+      var watcher = this.computedWatcher[key];
+      if (watcher.dirty) {
+        // 如果是脏的，则执行
+        watcher.evaluate();
+      }
+      if (Dep.target) {
+        //计算属性出栈后还有渲染过程，我应该让计算属性watcher里面的属性也去收集上一层watcher
+        watcher.depend();
+      }
+      return watcher.value;
+    };
+  }
 
   function createElement(vm, tag) {
     var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -583,13 +667,14 @@
   }
 
   function createElm(vnode) {
-    var tag = vnode.tag;
-      vnode.data;
-      var children = vnode.children,
+    var tag = vnode.tag,
+      data = vnode.data,
+      children = vnode.children,
       text = vnode.text;
-    if (typeof tag === 'string') {
+    if (typeof tag === "string") {
       //元素
       vnode.el = document.createElement(tag); //后续我们需要diff算法，拿虚拟节点比对后更新dom
+      patchProps(vnode.el, data);
       children.forEach(function (children) {
         // 递归渲染
         vnode.el.appendChild(createElm(children));
@@ -601,6 +686,17 @@
     return vnode.el; //从根虚拟节点创建真实节点
   }
 
+  function patchProps(el, props) {
+    for (var key in props) {
+      if (key === "style") {
+        for (var styleName in props[key]) {
+          el.style[styleName] = props.style[styleName];
+        }
+      } else {
+        el.setAttribute(key, props[key]);
+      }
+    }
+  }
   function patch(oldVnode, vnode) {
     var isRealElement = oldVnode && oldVnode.nodeType; // 如果有说明他是一个元素
     if (isRealElement) {
@@ -662,7 +758,7 @@
       //用于初始化操作
       var vm = this;
       vm.$options = options; //将用户的选项挂载到实例上
-      // 初始化状态
+      // 初始化状态，初始化计算属性，watcher
       initState(vm);
       // todo...
       if (options.el) {

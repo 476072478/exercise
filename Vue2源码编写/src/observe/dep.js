@@ -17,4 +17,13 @@ export default class Dep{
         this.subs.forEach(watcher => watcher.update()) //告诉watcher要更新了
     }
 }
+let stack = []
+export function pushTarget(watcher){
+    stack.push(watcher)
+    Dep.target = watcher
+}
+export function popTarget(){
+    stack.pop()
+    Dep.target = stack[stack.length - 1]
+}
 Dep.target = null

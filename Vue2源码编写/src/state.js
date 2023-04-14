@@ -1,10 +1,14 @@
 import { observe } from "./observe/index";
-
+import Watcher from "./observe/watcher";
+import Dep from "./observe/dep";
 export function initState(vm) {
     // 对数据进行劫持
     const opts = vm.$options;
     if (opts.data) {
         initData(vm);
+    }
+    if (opts.computed) {
+        initComputed(vm)
     }
 }
 function Proxy(vm, target, key) {
@@ -28,4 +32,37 @@ function initData(vm) {
         Proxy(vm, "_data", key);
     }
     observe(data);
+}
+
+function initComputed(vm) {
+    const computed = vm.$options.computed
+    const watchers = vm.computedWatcher = {} //将计算属性watcher保存到vm上
+    for (let key in computed) {
+        let userDef = computed[key]
+        // 我们需要监控计算属性中get的变化
+        let fn = typeof userDef === 'function' ? userDef : userDef.get
+        watchers[key] = new Watcher(vm, fn, { lazy: true })
+        defineComputed(vm, key, userDef)
+    }
+}
+function defineComputed(target, key, userDef) {
+    const setter = userDef.set || (() => { })
+    Object.defineProperty(target, key, {
+        get: createComputedGeeter(key),
+        set: setter
+    })
+}
+function createComputedGeeter(key) {
+    // 我们需要监测是否要执行这个getter
+    return function(){
+        const watcher = this.computedWatcher[key]
+        if(watcher.dirty){
+            // 如果是脏的，则执行
+            watcher.evaluate()
+        }
+        if(Dep.target){ //计算属性出栈后还有渲染过程，我应该让计算属性watcher里面的属性也去收集上一层watcher
+            watcher.depend()
+        }
+        return watcher.value
+    }
 }

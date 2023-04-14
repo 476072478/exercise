@@ -30,7 +30,7 @@ methods.forEach(method => {
             ob.observeArray(inserted)
         }
         // 走到这里
-        
+        ob.dep.notify() //数组变化了，通知对应的watcher实现更新
         return result
     }
 }) 
