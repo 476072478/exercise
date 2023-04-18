@@ -9,7 +9,7 @@ function createElm(vnode) {
             vnode.el.appendChild(createElm(children));
         });
     } else {
-        //文本
+        // 文本
         vnode.el = document.createTextNode(text);
     }
     return vnode.el; //从根虚拟节点创建真实节点

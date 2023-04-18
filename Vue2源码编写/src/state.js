@@ -1,5 +1,5 @@
 import { observe } from "./observe/index";
-import Watcher from "./observe/watcher";
+import Watcher, { nextTick } from "./observe/watcher";
 import Dep from "./observe/dep";
 export function initState(vm) {
     // 对数据进行劫持
@@ -11,7 +11,7 @@ export function initState(vm) {
         initComputed(vm)
     }
     if (opts.watch) {
-        initWatch(vm)    
+        initWatch(vm)
     }
 }
 function initWatch(vm) {
@@ -32,7 +32,7 @@ function creatWatch(vm, key, handler) {
     if (typeof handler === 'string') {
         handler = vm[handler]
     }
-    return vm.$watch(key,handler)
+    return vm.$watch(key, handler)
 }
 function Proxy(vm, target, key) {
     // 使用时候的劫持
@@ -87,5 +87,11 @@ function createComputedGeeter(key) {
             watcher.depend()
         }
         return watcher.value
+    }
+}
+export function initStateMixin(Vue) {
+    Vue.prototype.$nextTick = nextTick;
+    Vue.prototype.$watch = function (exprOrFn, cb) {
+        new Watcher(this, exprOrFn, { user: true }, cb)
     }
 }

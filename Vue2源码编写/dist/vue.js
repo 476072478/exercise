@@ -679,6 +679,14 @@
       return watcher.value;
     };
   }
+  function initStateMixin(Vue) {
+    Vue.prototype.$nextTick = nextTick;
+    Vue.prototype.$watch = function (exprOrFn, cb) {
+      new Watcher(this, exprOrFn, {
+        user: true
+      }, cb);
+    };
+  }
 
   function createElement(vm, tag) {
     var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
@@ -715,7 +723,7 @@
         vnode.el.appendChild(createElm(children));
       });
     } else {
-      //文本
+      // 文本
       vnode.el = document.createTextNode(text);
     }
     return vnode.el; //从根虚拟节点创建真实节点
@@ -788,11 +796,19 @@
     // 观察者模式
   }
 
+  /*
+   * @Author: 小唐 476072478@qq.com
+   * @Date: 2023-03-03 09:58:34
+   * @LastEditors: 小唐 476072478@qq.com
+   * @LastEditTime: 2023-04-18 16:10:58
+   * @FilePath: \Vue2源码编写\src\init.js
+   * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+   */
   function initMixin(Vue) {
     Vue.prototype._init = function (options) {
-      //用于初始化操作
+      // 用于初始化操作
       var vm = this;
-      vm.$options = options; //将用户的选项挂载到实例上
+      vm.$options = options; // 将用户的选项挂载到实例上
       // 初始化状态，初始化计算属性，watcher
       initState(vm);
       // todo...
@@ -805,10 +821,10 @@
       el = document.querySelector(el);
       var ops = vm.$options;
       if (!ops.render) {
-        //先查找有没有render函数
+        // 先查找有没有render函数
         var template;
         if (!ops.template && el) {
-          //如果没有render函数有el
+          // 如果没有render函数有el
           template = el.outerHTML;
         } else {
           // 写了templat，就用写了的template
@@ -822,23 +838,26 @@
           ops.render = render;
         }
       }
-      //将实例挂载到el上
+      // 将实例挂载到el上
       mountComponent(vm, el);
     };
   }
 
+  /*
+   * @Author: 小唐 476072478@qq.com
+   * @Date: 2023-03-03 09:34:32
+   * @LastEditors: 小唐 476072478@qq.com
+   * @LastEditTime: 2023-04-18 16:34:41
+   * @FilePath: \Vue2源码编写\src\index.js
+   * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+   */
   function Vue(options) {
     this._init(options);
   }
-  Vue.prototype.$nextTick = nextTick;
+  initStateMixin(Vue);
   initMixin(Vue); //扩展了init方法
   lifeCycleMixin(Vue);
   // watch最终调用的是这个方法
-  Vue.prototype.$watch = function (exprOrFn, cb) {
-    new Watcher(this, exprOrFn, {
-      user: true
-    }, cb);
-  };
 
   return Vue;
 
