@@ -11,7 +11,6 @@
 
 <body>
     <div id="box" class="mybox" style="color:yellow;background:red">
-        {{backName}} {{backName}} {{backName}}{{c}}
     </div>
     <script src="./vue.js"></script>
     <script>
@@ -22,19 +21,23 @@
                 return {
                     a: '长沙',
                     b: '深圳',
-                    c:'啦啦啦'
+                    c: '啦啦啦',
+                }
+            },
+            watch: {
+                a(newValue, oldValue) {
+                    console.log(newValue, oldValue)
                 }
             },
             computed: {
-                backName() {
-                    return this.a + this.b
+                username() {
+                    return this.a.name + this.b
                 }
             },
             el: '#box',
         })
         setTimeout(() => {
-            // vm.a = '成都'
-            vm.c='哈哈哈'
+            vm.a = '哈哈哈'
         }, 1000);
     </script>
 </body>

@@ -10,6 +10,29 @@ export function initState(vm) {
     if (opts.computed) {
         initComputed(vm)
     }
+    if (opts.watch) {
+        initWatch(vm)    
+    }
+}
+function initWatch(vm) {
+    let watch = vm.$options.watch;
+    for (let key in watch) {
+        let handler = watch[key]
+        if (Array.isArray(watch)) {
+            for (let i = 0; i < watch.length; i++) {
+                creatWatch(vm, key, handler[i])
+            }
+        } else {
+            creatWatch(vm, key, handler)
+        }
+    }
+}
+function creatWatch(vm, key, handler) {
+    // 字符串,函数
+    if (typeof handler === 'string') {
+        handler = vm[handler]
+    }
+    return vm.$watch(key,handler)
 }
 function Proxy(vm, target, key) {
     // 使用时候的劫持
@@ -54,13 +77,13 @@ function defineComputed(target, key, userDef) {
 }
 function createComputedGeeter(key) {
     // 我们需要监测是否要执行这个getter
-    return function(){
+    return function () {
         const watcher = this.computedWatcher[key]
-        if(watcher.dirty){
+        if (watcher.dirty) {
             // 如果是脏的，则执行
             watcher.evaluate()
         }
-        if(Dep.target){ //计算属性出栈后还有渲染过程，我应该让计算属性watcher里面的属性也去收集上一层watcher
+        if (Dep.target) { //计算属性出栈后还有渲染过程，我应该让计算属性watcher里面的属性也去收集上一层watcher
             watcher.depend()
         }
         return watcher.value

@@ -65,17 +65,24 @@ function queueWatcher(watcher) {
 
 let id = 0
 class Watcher {
-    constructor(vm, fn, options) { // 不同组件有不同watcher
+    constructor(vm, exprOrFn, options, cb) { // 不同组件有不同watcher
         this.id = id++
         this.renderWatcher = options //是一个渲染过程
-        this.getter = fn // getter意味着调用这个函数会发生取值操作
+        if (typeof exprOrFn === 'string') {
+            this.getter = function () {
+                return vm[exprOrFn]
+            }
+        } else {
+            this.getter = exprOrFn // getter意味着调用这个函数会发生取值操作
+        }
         this.deps = [] //后续我们实现计算属性和清理工作会用到
         this.depsId = new Set()
         this.lazy = options.lazy
         this.dirty = this.lazy //缓存
+        this.cb = cb
         this.vm = vm
-        this.value = ''
-        this.lazy ? undefined : this.get()
+        this.user = options.user // 标识是否是用户自己的watcher
+        this.value = this.lazy ? undefined : this.get()
     }
     evaluate() {
         this.value = this.get()
@@ -95,22 +102,26 @@ class Watcher {
             dep.addSub(this)
         }
     }
-    depend(){
+    depend() {
         let i = this.deps.length
-        while(i--){
+        while (i--) {
             this.deps[i].depend() //让计算属性watcher也收集渲染过程
         }
     }
     update() {
-        if(this.lazy){
+        if (this.lazy) {
             //如果是计算属性,依赖的值变化了，就标值计算属性是脏值
             this.dirty = true
-        }else{
+        } else {
             queueWatcher(this) //把当前的watcher暂存起来
         }
     }
     run() {
-        this.get()
+        let oldValue = this.value
+        let newValue = this.get()
+        if (this.user) {
+            this.cb.call(this.vm,oldValue, newValue)
+        }
     }
 }
 // 需要给每个属性增加一个dep，目的就是收集watcher

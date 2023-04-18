@@ -511,19 +511,27 @@
   }
   var id = 0;
   var Watcher = /*#__PURE__*/function () {
-    function Watcher(vm, fn, options) {
+    function Watcher(vm, exprOrFn, options, cb) {
       _classCallCheck(this, Watcher);
       // 不同组件有不同watcher
       this.id = id++;
       this.renderWatcher = options; //是一个渲染过程
-      this.getter = fn; // getter意味着调用这个函数会发生取值操作
+      if (typeof exprOrFn === 'string') {
+        this.getter = function () {
+          return vm[exprOrFn];
+        };
+      } else {
+        this.getter = exprOrFn; // getter意味着调用这个函数会发生取值操作
+      }
+
       this.deps = []; //后续我们实现计算属性和清理工作会用到
       this.depsId = new Set();
       this.lazy = options.lazy;
       this.dirty = this.lazy; //缓存
+      this.cb = cb;
       this.vm = vm;
-      this.value = '';
-      this.lazy ? undefined : this.get();
+      this.user = options.user; // 标识是否是用户自己的watcher
+      this.value = this.lazy ? undefined : this.get();
     }
     _createClass(Watcher, [{
       key: "evaluate",
@@ -571,7 +579,11 @@
     }, {
       key: "run",
       value: function run() {
-        this.get();
+        var oldValue = this.value;
+        var newValue = this.get();
+        if (this.user) {
+          this.cb.call(this.vm, oldValue, newValue);
+        }
       }
     }]);
     return Watcher;
@@ -586,6 +598,29 @@
     if (opts.computed) {
       initComputed(vm);
     }
+    if (opts.watch) {
+      initWatch(vm);
+    }
+  }
+  function initWatch(vm) {
+    var watch = vm.$options.watch;
+    for (var key in watch) {
+      var handler = watch[key];
+      if (Array.isArray(watch)) {
+        for (var i = 0; i < watch.length; i++) {
+          creatWatch(vm, key, handler[i]);
+        }
+      } else {
+        creatWatch(vm, key, handler);
+      }
+    }
+  }
+  function creatWatch(vm, key, handler) {
+    // 字符串,函数
+    if (typeof handler === 'string') {
+      handler = vm[handler];
+    }
+    return vm.$watch(key, handler);
   }
   function Proxy(vm, target, key) {
     // 使用时候的劫持
@@ -798,6 +833,12 @@
   Vue.prototype.$nextTick = nextTick;
   initMixin(Vue); //扩展了init方法
   lifeCycleMixin(Vue);
+  // watch最终调用的是这个方法
+  Vue.prototype.$watch = function (exprOrFn, cb) {
+    new Watcher(this, exprOrFn, {
+      user: true
+    }, cb);
+  };
 
   return Vue;
 
