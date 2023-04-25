@@ -1,4 +1,4 @@
-function createElm(vnode) {
+export function createElm(vnode) {
     let { tag, data, children, text } = vnode;
     if (typeof tag === "string") {
         //元素
@@ -37,6 +37,21 @@ export function patch(oldVnode, vnode) {
         return el;
     } else {
         // diff算法
+        // 两个节点不是同一个节点，直接删除老的换上新的（没有比对了）
+        if (!isSameVnode(oldVnode, vnode)) {
+            let el = createElm(vnode)
+            oldVnode.el.parentNode.replaceChild(el, oldVnode.el)
+            return el
+        }
+        let el = vnode.le = oldVnode.el // 复用老节点的元素
+        // 是文本
+        if (!oldVnode.tag) {
+            if (oldVnode.text !== vnode.text) {
+                el.textContent = vnode.text
+            }
+        }
+        // 是标签
+        console.log(oldVnode,vnode)
     }
 }
 // 每次更新页面的话，dom结果是不会变的，我调用render方法时，数据变化了会根据数据渲染成新的虚拟节点，用新的虚拟节点渲染dom

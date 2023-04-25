@@ -360,7 +360,6 @@
     function Observe(data) {
       _classCallCheck(this, Observe);
       this.dep = new Dep(); //所有对象都要增加dep
-
       Object.defineProperty(data, "__ob__", {
         value: this,
         enumerable: false // 不可枚举
@@ -681,6 +680,7 @@
   }
   function initStateMixin(Vue) {
     Vue.prototype.$nextTick = nextTick;
+    // watch最终调用的是这个方法
     Vue.prototype.$watch = function (exprOrFn, cb) {
       new Watcher(this, exprOrFn, {
         user: true
@@ -750,6 +750,23 @@
       parentNode.insertBefore(el, oldElm.nextSibling);
       parentNode.removeChild(oldElm);
       return el;
+    } else {
+      // diff算法
+      // 两个节点不是同一个节点，直接删除老的换上新的（没有比对了）
+      if (!isSameVnode(oldVnode, vnode)) {
+        var _el = createElm(vnode);
+        oldVnode.el.parentNode.replaceChild(_el, oldVnode.el);
+        return _el;
+      }
+      var _el2 = vnode.le = oldVnode.el; // 复用老节点的元素
+      // 是文本
+      if (!oldVnode.tag) {
+        if (oldVnode.text !== vnode.text) {
+          _el2.textContent = vnode.text;
+        }
+      }
+      // 是标签
+      console.log(oldVnode, vnode);
     }
   }
   // 每次更新页面的话，dom结果是不会变的，我调用render方法时，数据变化了会根据数据渲染成新的虚拟节点，用新的虚拟节点渲染dom
@@ -847,7 +864,7 @@
    * @Author: 小唐 476072478@qq.com
    * @Date: 2023-03-03 09:34:32
    * @LastEditors: 小唐 476072478@qq.com
-   * @LastEditTime: 2023-04-18 16:34:41
+   * @LastEditTime: 2023-04-18 16:38:05
    * @FilePath: \Vue2源码编写\src\index.js
    * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
    */
@@ -857,7 +874,6 @@
   initStateMixin(Vue);
   initMixin(Vue); //扩展了init方法
   lifeCycleMixin(Vue);
-  // watch最终调用的是这个方法
 
   return Vue;
 

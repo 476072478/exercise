@@ -91,6 +91,7 @@ function createComputedGeeter(key) {
 }
 export function initStateMixin(Vue) {
     Vue.prototype.$nextTick = nextTick;
+    // watch最终调用的是这个方法
     Vue.prototype.$watch = function (exprOrFn, cb) {
         new Watcher(this, exprOrFn, { user: true }, cb)
     }

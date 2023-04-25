@@ -1,9 +1,16 @@
+/*
+ * @Author: 小唐 476072478@qq.com
+ * @Date: 2023-03-03 10:51:27
+ * @LastEditors: 小唐 476072478@qq.com
+ * @LastEditTime: 2023-04-18 17:52:12
+ * @FilePath: \Vue2源码编写\src\observe\index.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import { newArrayProto } from "./array";
 import Dep from "./dep";
 class Observe {
   constructor(data) {
     this.dep = new Dep(); //所有对象都要增加dep
-
     Object.defineProperty(data, "__ob__", {
       value: this,
       enumerable: false, // 不可枚举
