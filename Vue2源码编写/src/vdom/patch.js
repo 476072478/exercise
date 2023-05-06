@@ -1,9 +1,11 @@
+import { isSameVnode } from "./index";
+
 export function createElm(vnode) {
     let { tag, data, children, text } = vnode;
     if (typeof tag === "string") {
         //元素
         vnode.el = document.createElement(tag); //后续我们需要diff算法，拿虚拟节点比对后更新dom
-        patchProps(vnode.el, data);
+        patchProps(vnode.el, {}, data);
         children.forEach((children) => {
             // 递归渲染
             vnode.el.appendChild(createElm(children));
@@ -14,8 +16,21 @@ export function createElm(vnode) {
     }
     return vnode.el; //从根虚拟节点创建真实节点
 }
-function patchProps(el, props) {
-    for (let key in props) {
+function patchProps(el, oldprops = {}, props = {}) {
+    // 老的属性中有，新的没有，要删除老的
+    let oldStyles = oldprops.style || {}
+    let newStyles = props.style || {}
+    for (let key in oldStyles) { // 老的样式中有，新的样式中没有则删除
+        if (!newStyles[key]) {
+            el.style[key] = ''
+        }
+    }
+    for (let key in oldprops) { // 老的属性中有，新的没有删除属性
+        if (!props[key]) {
+            el.removeAttribute(key)
+        }
+    }
+    for (let key in props) { // 用新的覆盖老的
         if (key === "style") {
             for (let styleName in props[key]) {
                 el.style[styleName] = props.style[styleName];
@@ -38,20 +53,92 @@ export function patch(oldVnode, vnode) {
     } else {
         // diff算法
         // 两个节点不是同一个节点，直接删除老的换上新的（没有比对了）
-        if (!isSameVnode(oldVnode, vnode)) {
-            let el = createElm(vnode)
-            oldVnode.el.parentNode.replaceChild(el, oldVnode.el)
-            return el
+        // 两个节点是同一个节点，（判断节点的tag和节点的key） 比较两个节点的属性是否有差异（复用老的节点，将差异的属性更新）
+        // 节点比较完毕后，需要比较两个节点的儿子
+        patchVonde(oldVnode, vnode)
+    }
+}
+function mountChildren(el, newChildren) {
+    for (let i = 0; i < newChildren.length; i++) {
+        let child = newChildren[i]
+        el.appendChild(createElm(child))
+    }
+}
+function patchVonde(oldVnode, vnode) {
+    if (!isSameVnode(oldVnode, vnode)) {
+        let el = createElm(vnode)
+        oldVnode.el.parentNode.replaceChild(el, oldVnode.el)
+        return el
+    }
+    // 文本的情况，文本我们期望比较一下文本的内容
+    let el = vnode.el = oldVnode.el // 复用老节点的元素
+    if (!oldVnode.tag) { // 是文本
+        if (oldVnode.text !== vnode.text) {
+            el.textContent = vnode.text
         }
-        let el = vnode.le = oldVnode.el // 复用老节点的元素
-        // 是文本
-        if (!oldVnode.tag) {
-            if (oldVnode.text !== vnode.text) {
-                el.textContent = vnode.text
-            }
+        return
+    }
+    // console.log(oldVnode, vnode)
+    // 是标签 标签我们需要比对标签的属性
+    patchProps(el, oldVnode.data, vnode.data)
+
+    // 比较儿子节点，一方有儿子，一方没儿子
+    // 两方都有儿子
+    let oldChildren = oldVnode.children || []
+    let newChildren = vnode.children || []
+    if (oldChildren.length > 0 && newChildren.length > 0) {
+        // 两方都有儿子
+        updateChildren(el, oldChildren, newChildren)
+    } else if (newChildren.length > 0) {
+        mountChildren(el, newChildren)
+    } else if (oldChildren.length > 0) {
+        el.innerHTML = ''
+    }
+    return el
+}
+function updateChildren(el, oldChildren, newChildren) {
+    // 双指针
+    let oldStartIndex = 0
+    let newStartIndex = 0
+    let oldEndIndex = oldChildren.length - 1
+    let newEndIndex = newChildren.length - 1
+    let oldStartVnode = oldChildren[0]
+    let newStartVnode = newChildren[0]
+    let oldEndVnode = oldChildren[oldEndIndex]
+    let newEndVnode = newChildren[newEndIndex]
+    while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) { // 有任何一个不满足则停止
+        // 双方有一方头指针，大于尾部指针则停止循环 
+        // 比较开头节点
+        if (isSameVnode(oldStartVnode, newStartVnode)) {
+            patchVonde(oldStartVnode, newStartVnode) //如果是相同节点则递归比较子节点
+            oldStartVnode = oldChildren[++oldStartIndex]
+            newStartVnode = newChildren[++newStartIndex]
         }
-        // 是标签
-        console.log(oldVnode,vnode)
+        // 比较尾部节点
+        if (isSameVnode(oldEndVnode, newEndVnode)) {
+            patchVonde(oldEndVnode, newEndVnode)
+            oldEndVnode = oldChildren[--oldEndIndex]
+            newEndVnode = newChildren[--newEndIndex]
+        }
+        // 交叉比对 abcd - > dabc
+        if (isSameVnode(oldStartVnode, newEndVnode)) {
+            patchVonde(oldEndVnode, newEndVnode)
+            el.removeChild
+        }
+    }
+    if (newStartIndex <= newEndIndex) { // 新得多了，多余的就插入进去
+        for (let i = newStartIndex; i <= newEndIndex; i++) {
+            let childEL = createElm(newChildren[i])
+            // 这里可能是向后追加，还有可能向前追追加
+            let anchor = newChildren[newEndIndex + 1] ? newChildren[newEndIndex + 1].el : null  // 获取下一个元素
+            el.insertBefore(childEL, anchor); // anchor为null的时候则会认为是appednChild
+        }
+    }
+    if (oldStartIndex <= oldEndIndex) { // 老的多了，多的就删除
+        for (let i = oldStartIndex; i <= oldEndIndex; i++) {
+            let childEL = oldChildren[i].el
+            el.removeChild(childEL)
+        }
     }
 }
 // 每次更新页面的话，dom结果是不会变的，我调用render方法时，数据变化了会根据数据渲染成新的虚拟节点，用新的虚拟节点渲染dom

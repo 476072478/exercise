@@ -6,13 +6,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-
+    <style>
+        body,
+        html {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="box" class="mybox" style="color:yellow;background:red">
+    <div id="box" class="mybox">
+        <div class="bottomAnimation">
+            <div class="rotateCircleBox">
+                <div class="outterCircleRotate1">
+                    <div class="outterCircleRotate2">
+                        <div class="centerNoMove">
+                            <div class="innerCircleRotate"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="jinghui3d"></div>
+        </div>
     </div>
-    <script src="./vue.js"></script>
+    <!-- <script src="./vue.js"></script> -->
     <script>
         // let box = document.querySelector('#box')
         // //  响应式数据变化，数据变化了可以监控
@@ -40,6 +58,46 @@
         //     vm.a = '哈哈哈'
         // }, 1000);
     </script>
+    <style>
+        .bottomAnimation {
+            .rotateCircleBox {
+                transform: rotateX(72deg) rotateY(0deg);
+            }
+
+            .outterCircleRotate2 {
+                background: url("./模块图标样式1.png") no-repeat center center;
+                width: 100px;
+                height: 100px;
+                background-size: 100%;
+                -webkit-transform: rotate(-360deg);
+                transform: rotate(-360deg);
+                animation: rotation1 4s linear infinite;
+                -moz-animation: rotation1 4s linear infinite;
+                -webkit-animation: rotation1 4s linear infinite;
+                -o-animation: rotation1 4s linear infinite;
+            }
+        }
+
+        @keyframes rotation {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes rotation1 {
+            from {
+                -webkit-transform: rotate(0deg);
+            }
+
+            to {
+                -webkit-transform: rotate(-360deg);
+            }
+        }
+    </style>
 </body>
 
 </html>
