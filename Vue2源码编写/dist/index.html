@@ -17,87 +17,39 @@
 
 <body>
     <div id="box" class="mybox">
-        <div class="bottomAnimation">
-            <div class="rotateCircleBox">
-                <div class="outterCircleRotate1">
-                    <div class="outterCircleRotate2">
-                        <div class="centerNoMove">
-                            <div class="innerCircleRotate"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="jinghui3d"></div>
-        </div>
+        <li>
+            {{a}}
+        </li>
+        <li>
+            {{b}}
+        </li>
+        <li>
+            {{c}}
+        </li>
     </div>
-    <!-- <script src="./vue.js"></script> -->
+    <script src="./vue.js"></script>
     <script>
-        // let box = document.querySelector('#box')
-        // //  响应式数据变化，数据变化了可以监控
-        // const vm = new Vue({
-        //     data() { //代理数据
-        //         return {
-        //             a: '长沙',
-        //             b: '深圳',
-        //             c: '啦啦啦',
-        //         }
-        //     },
-        //     watch: {
-        //         a(newValue, oldValue) {
-        //             console.log(newValue, oldValue)
-        //         }
-        //     },
-        //     computed: {
-        //         username() {
-        //             return this.a.name + this.b
-        //         }
-        //     },
-        //     el: '#box',
-        // })
-        // setTimeout(() => {
-        //     vm.a = '哈哈哈'
-        // }, 1000);
+        let box = document.querySelector('#box')
+        //  响应式数据变化，数据变化了可以监控
+        const vm = new Vue({
+            data() { //代理数据
+                return {
+                    a: '长沙',
+                    b: '深圳',
+                    c: '成都',
+                }
+            },
+            computed: {
+                username() {
+                    return this.a.name + this.b
+                }
+            },
+            el: '#box',
+        })
+        setTimeout(() => {
+            vm.a = '北京'
+        }, 1000);
     </script>
-    <style>
-        .bottomAnimation {
-            .rotateCircleBox {
-                transform: rotateX(72deg) rotateY(0deg);
-            }
-
-            .outterCircleRotate2 {
-                background: url("./模块图标样式1.png") no-repeat center center;
-                width: 100px;
-                height: 100px;
-                background-size: 100%;
-                -webkit-transform: rotate(-360deg);
-                transform: rotate(-360deg);
-                animation: rotation1 4s linear infinite;
-                -moz-animation: rotation1 4s linear infinite;
-                -webkit-animation: rotation1 4s linear infinite;
-                -o-animation: rotation1 4s linear infinite;
-            }
-        }
-
-        @keyframes rotation {
-            from {
-                -webkit-transform: rotate(0deg);
-            }
-
-            to {
-                -webkit-transform: rotate(360deg);
-            }
-        }
-
-        @keyframes rotation1 {
-            from {
-                -webkit-transform: rotate(0deg);
-            }
-
-            to {
-                -webkit-transform: rotate(-360deg);
-            }
-        }
-    </style>
 </body>
 
 </html>

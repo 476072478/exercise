@@ -42,15 +42,34 @@ exports.search = (req, res) => {
 exports.travelrouter = (req, res) => {
     const travelsql = 'select * from leyou_travel_router where spot_id = ?'
     const getroute = 'select * from leyou_spot_introduce where Id = ?'
+    const viewRouter = `update leyou_spot_introduce set viewNum = ? where Id = ${req.params.id}`
+    const getRouterView = `select * from leyou_spot_introduce where Id = ${req.params.id}`
     db.query(travelsql, req.params.id, (err, result1) => {
         if (err) return res.cc('数据请求失败')
-        db.query(getroute, req.params.id, (err, result2) => {
-            res.send({
-                status: 0,
-                message: '数据请求成功!',
-                data: [result1, ...result2]
+        if (result1) {
+            db.query(getroute, req.params.id, (err, result2) => {
+                if (err) return res.cc(err)
+                if (result2) {
+                    db.query(getRouterView, (err, result2) => {
+                        if (err) return res.cc(err)
+                        if (result2[0].viewNum) {
+                            let num = Number(result2[0].viewNum) + 1
+                            db.query(viewRouter, num, (err, result3) => {
+                                if (err) {
+                                    res.cc(err)
+                                } else {
+                                    res.send({
+                                        status: 0,
+                                        message: '数据请求成功!',
+                                        data: [result1, ...result2]
+                                    })
+                                }
+                            })
+                        }
+                    })
+                }
             })
-        })
+        }
     })
 }
 
@@ -209,7 +228,7 @@ exports.addfoot = (req, res) => {
         } else {
             //有用户记录修改
             if (!result[0].user_foot.includes(user_foot)) {
-                let data = user_foot + ',' + result[0].user_foot
+                let data = result[0].user_foot ? user_foot + ',' + result[0].user_foot : user_foot
                 db.query(add, [data, user_id], (err, result) => {
                     if (err) return res.cc(err)
                     if (result.affectedRows !== 1) return res.cc(result)
@@ -427,7 +446,7 @@ exports.updateRouteSpotInfo = (req, res) => {
     })
 }
 
-// 管理元上传拥有旅游线路的景区
+// 管理员上传拥有旅游线路的景区
 exports.adminUploadSpotInfo = (req, res) => {
     const insertInfo = 'insert into leyou_spot_introduce set ?'
     db.query(insertInfo, req.body, (err, result) => {

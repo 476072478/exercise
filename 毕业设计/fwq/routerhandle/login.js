@@ -76,18 +76,17 @@ exports.adminlogin = (req, res) => {
         if (result.length === 0) {
             return res.cc('用户名输入错误')
         }
-        if(result[0].adminpassword == pass){
+        if (result[0].adminpassword == pass) {
             let newresult = { ...result[0], adminpassword: '', status: "" }
             const tokenstr = jwt.sign(newresult, config.secretKey, { expiresIn: '168h' })
-            res.send({ message:'恭喜您，登录成功!',...newresult, token: 'Bearer' + ' ' + tokenstr })
-        }else{
+            res.send({ message: '恭喜您，登录成功!', ...newresult, token: 'Bearer' + ' ' + tokenstr })
+        } else {
             res.cc('密码输入错误')
         }
     })
 }
 //微信用户登录接口
 exports.logins = (req, res) => {
-    console.log(req.body)
     let appId = 'wx884b78952c3db4a4'
     let appSecret = '4719590b9411233a0c8a4c7694e60058'
     let reqs = req.body
@@ -99,10 +98,10 @@ exports.logins = (req, res) => {
             var iv = reqs.iv.replace(/ /g, '+')
             var pc = new WXBizDataCrypt(appId, sessionKey)
             var data = pc.decryptData(encryptedData, iv)
-            console.log(data)
             const { avatarUrl, watermark: { timestamp, appid } } = data
             let sql = `select * from leyou.leyou_front_user where openId = '${data.openId}' && status = 0`
             let add = `insert into leyou_front_user set ?`
+            let addUserFront = `insert into leyou_follow set id = '${data.openId}'`
             const user = { username: data.nickName, password: '', nickname: data.nickName, email: '', openId: data.openId, avatarUrl: avatarUrl, timestamp: timestamp, appid: appid }
             function mylogins() {
                 db.query(sql, (err, result) => {
@@ -112,18 +111,24 @@ exports.logins = (req, res) => {
                     if (!result[0]) {
                         db.query(add, user, (err, result) => {
                             if (err) {
-                                return res.send(err.message)
+                                res.send(err.message)
                             }
                             if (result) {
                                 mylogins()
                             }
                         })
+                        db.query(addUserFront, (err, result) => {
+                            if (err) {
+                                res.send(err.message)
+                            }
+                        })
+                        return
                     }
                     if (result[0]) {
                         res.send({
                             status: 0,
                             message: '登录成功啦！',
-                            data: result[0]
+                            data: { ...result[0], appid: '' }
                         })
                     }
                 })

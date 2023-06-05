@@ -37,14 +37,14 @@
         <el-table :data="tableData" style="width: 100%">
           <el-table-column prop="origin" label="起点">
             <template slot-scope="scope">
-              <el-input v-model.number="scope.row.origin" :disabled="sureadd">
+              <el-input v-model="scope.row.origin" :disabled="sureadd">
               </el-input>
             </template>
           </el-table-column>
           <el-table-column prop="destination" label="终点">
             <template slot-scope="scope">
               <el-input
-                v-model.number="scope.row.destination"
+                v-model="scope.row.destination"
                 :disabled="sureadd"
               >
               </el-input>

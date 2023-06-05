@@ -106,24 +106,56 @@ function updateChildren(el, oldChildren, newChildren) {
     let newStartVnode = newChildren[0]
     let oldEndVnode = oldChildren[oldEndIndex]
     let newEndVnode = newChildren[newEndIndex]
+    function makeIndexByKey(children) {
+        let map = {}
+        children.forEach((child, index) => {
+            map[child.key] = index
+        })
+        return map
+    }
+    let map = makeIndexByKey(oldChildren)
     while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) { // 有任何一个不满足则停止
+        if (!oldStartVnode) {
+            oldStartVnode = oldChildren[++oldStartIndex]
+        } else if (!oldEndVnode) {
+            oldEndVnode = oldChildren[--oldStartIndex]
+        }
         // 双方有一方头指针，大于尾部指针则停止循环 
         // 比较开头节点
         if (isSameVnode(oldStartVnode, newStartVnode)) {
             patchVonde(oldStartVnode, newStartVnode) //如果是相同节点则递归比较子节点
             oldStartVnode = oldChildren[++oldStartIndex]
             newStartVnode = newChildren[++newStartIndex]
-        }
-        // 比较尾部节点
-        if (isSameVnode(oldEndVnode, newEndVnode)) {
+        } else if (isSameVnode(oldEndVnode, newEndVnode)) {
             patchVonde(oldEndVnode, newEndVnode)
             oldEndVnode = oldChildren[--oldEndIndex]
             newEndVnode = newChildren[--newEndIndex]
-        }
-        // 交叉比对 abcd - > dabc
-        if (isSameVnode(oldStartVnode, newEndVnode)) {
-            patchVonde(oldEndVnode, newEndVnode)
-            el.removeChild
+            // 比较尾部节点
+        } else if (isSameVnode(oldEndVnode, newStartVnode)) {
+            patchVonde(oldEndVnode, newStartVnode)
+            el.insertBefore(oldEndVnode.el, oldStartVnode.el)
+            oldEndVnode = oldChildren[--oldEndIndex]
+            newStartVnode = newChildren[++newStartIndex]
+            // 交叉比对 abcd - > dabc
+        } else if (isSameVnode(oldStartVnode, newEndVnode)) {
+            patchVonde(oldStartVnode, newEndVnode)
+            el.insertBefore(oldStartVnode.el, oldEndVnode.el.nextSibling)
+            oldStartVnode = oldChildren[++oldStartIndex]
+            newEndVnode = newChildren[--newEndIndex]
+            // 交叉比对 dabc - > abcd
+        } else {
+            // 乱序比对，尽可能的复用原来的dom
+            // 根据老的列表做一个映射关系，用新的去找，找到则移动，找不到则添加，最后多余的就删除
+            let moveIndex = map[newStartVnode.key] //如果拿到则说明是我要移动的索引
+            if (moveIndex !== undefined) {
+                let moveVnode = oldChildren[moveIndex] // 找到对应的虚拟节点
+                el.insertBefore(moveVnode.el, oldStartVnode.el)
+                oldChildren[moveIndex] = undefined // 不能删，删则导致数组塌陷，表示这个节点已经移动走了
+                patchVonde(moveVnode, newStartVnode)
+            } else {
+                el.insertBefore(createElm(newStartVnode), oldStartVnode.el)
+            }
+            newStartVnode = newChildren[++newStartIndex]
         }
     }
     if (newStartIndex <= newEndIndex) { // 新得多了，多余的就插入进去
@@ -136,8 +168,10 @@ function updateChildren(el, oldChildren, newChildren) {
     }
     if (oldStartIndex <= oldEndIndex) { // 老的多了，多的就删除
         for (let i = oldStartIndex; i <= oldEndIndex; i++) {
-            let childEL = oldChildren[i].el
-            el.removeChild(childEL)
+            if (oldChildren[i]) {
+                let childEL = oldChildren[i].el
+                el.removeChild(childEL)
+            }
         }
     }
 }

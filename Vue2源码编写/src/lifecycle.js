@@ -26,7 +26,15 @@ export function lifeCycleMixin(Vue) {
     Vue.prototype._update = function (vnode) { //将虚拟节点变成真实节点
         // 将Vnode渲染到el元素中
         const vm = this
-        vm.$el = patch(vm.$el,vnode) // 可以初始化渲染，后续更新也走这个patch方法
+        const el = vm.$el
+        const prevVnode = vm._vnode
+        vm._vnode = vnode //把组件第一次产生的虚拟节点保存到_vnode上
+        if(prevVnode){
+            // 之前渲染过了
+            vm.$el = patch(prevVnode,vnode)
+        }else{
+            vm.$el = patch(el,vnode)
+        }
     }
 }
 export function mountComponent(vm, el) {

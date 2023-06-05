@@ -828,25 +828,57 @@
     var newStartVnode = newChildren[0];
     var oldEndVnode = oldChildren[oldEndIndex];
     var newEndVnode = newChildren[newEndIndex];
+    function makeIndexByKey(children) {
+      var map = {};
+      children.forEach(function (child, index) {
+        map[child.key] = index;
+      });
+      return map;
+    }
+    var map = makeIndexByKey(oldChildren);
     while (oldStartIndex <= oldEndIndex && newStartIndex <= newEndIndex) {
       // 有任何一个不满足则停止
+      if (!oldStartVnode) {
+        oldStartVnode = oldChildren[++oldStartIndex];
+      } else if (!oldEndVnode) {
+        oldEndVnode = oldChildren[--oldStartIndex];
+      }
       // 双方有一方头指针，大于尾部指针则停止循环 
       // 比较开头节点
       if (isSameVnode(oldStartVnode, newStartVnode)) {
         patchVonde(oldStartVnode, newStartVnode); //如果是相同节点则递归比较子节点
         oldStartVnode = oldChildren[++oldStartIndex];
         newStartVnode = newChildren[++newStartIndex];
-      }
-      // 比较尾部节点
-      if (isSameVnode(oldEndVnode, newEndVnode)) {
+      } else if (isSameVnode(oldEndVnode, newEndVnode)) {
         patchVonde(oldEndVnode, newEndVnode);
         oldEndVnode = oldChildren[--oldEndIndex];
         newEndVnode = newChildren[--newEndIndex];
-      }
-      // 交叉比对 abcd - > dabc
-      if (isSameVnode(oldStartVnode, newEndVnode)) {
-        patchVonde(oldEndVnode, newEndVnode);
-        el.removeChild;
+        // 比较尾部节点
+      } else if (isSameVnode(oldEndVnode, newStartVnode)) {
+        patchVonde(oldEndVnode, newStartVnode);
+        el.insertBefore(oldEndVnode.el, oldStartVnode.el);
+        oldEndVnode = oldChildren[--oldEndIndex];
+        newStartVnode = newChildren[++newStartIndex];
+        // 交叉比对 abcd - > dabc
+      } else if (isSameVnode(oldStartVnode, newEndVnode)) {
+        patchVonde(oldStartVnode, newEndVnode);
+        el.insertBefore(oldStartVnode.el, oldEndVnode.el.nextSibling);
+        oldStartVnode = oldChildren[++oldStartIndex];
+        newEndVnode = newChildren[--newEndIndex];
+        // 交叉比对 dabc - > abcd
+      } else {
+        // 乱序比对，尽可能的复用原来的dom
+        // 根据老的列表做一个映射关系，用新的去找，找到则移动，找不到则添加，最后多余的就删除
+        var moveIndex = map[newStartVnode.key]; //如果拿到则说明是我要移动的索引
+        if (moveIndex !== undefined) {
+          var moveVnode = oldChildren[moveIndex]; // 找到对应的虚拟节点
+          el.insertBefore(moveVnode.el, oldStartVnode.el);
+          oldChildren[moveIndex] = undefined; // 不能删，删则导致数组塌陷，表示这个节点已经移动走了
+          patchVonde(moveVnode, newStartVnode);
+        } else {
+          el.insertBefore(createElm(newStartVnode), oldStartVnode.el);
+        }
+        newStartVnode = newChildren[++newStartIndex];
       }
     }
     if (newStartIndex <= newEndIndex) {
@@ -862,8 +894,10 @@
     if (oldStartIndex <= oldEndIndex) {
       // 老的多了，多的就删除
       for (var _i = oldStartIndex; _i <= oldEndIndex; _i++) {
-        var _childEL = oldChildren[_i].el;
-        el.removeChild(_childEL);
+        if (oldChildren[_i]) {
+          var _childEL = oldChildren[_i].el;
+          el.removeChild(_childEL);
+        }
       }
     }
   }
@@ -894,10 +928,17 @@
       //将虚拟节点变成真实节点
       // 将Vnode渲染到el元素中
       var vm = this;
-      vm.$el = patch(vm.$el, vnode); // 可以初始化渲染，后续更新也走这个patch方法
+      var el = vm.$el;
+      var prevVnode = vm._vnode;
+      vm._vnode = vnode; //把组件第一次产生的虚拟节点保存到_vnode上
+      if (prevVnode) {
+        // 之前渲染过了
+        vm.$el = patch(prevVnode, vnode);
+      } else {
+        vm.$el = patch(el, vnode);
+      }
     };
   }
-
   function mountComponent(vm, el) {
     //实现页面的挂载流程
     // 先将el挂载到实例上
@@ -909,6 +950,17 @@
     new Watcher(vm, updataComponent, true);
     //如果稍后数据变化，也调用这个函数重新执行
     // 观察者模式
+  }
+
+  function initGlobalAPI(Vue) {
+    // 静态方法
+    Vue.options = {};
+    Vue.extend = function (options) {
+      function Sub() {}
+      Sub.prototype = Object.create(Vue.prototype); //  Sub.prototype._proto_ =  Vue.prototype
+      Sub.options = options; // 保存用户传递的选项
+      return Sub;
+    };
   }
 
   /*
@@ -926,6 +978,7 @@
       vm.$options = options; // 将用户的选项挂载到实例上
       // 初始化状态，初始化计算属性，watcher
       initState(vm);
+      initGlobalAPI(vm);
       // todo...
       if (options.el) {
         vm.$mount(options.el);
@@ -964,25 +1017,6 @@
   initStateMixin(Vue);
   initMixin(Vue); // 扩展了init方法
   lifeCycleMixin(Vue);
-  var render1 = compileToFunction("\n    <ul a='1' style='background:yellow'>\n        <li key='a'>a</li>\n        <li key='b'>b</li>\n        <li key='c'>c</li>\n        <li key='d'>d</li> \n    </ul>");
-  var vm1 = new Vue({
-    data: {
-      name: 'zf'
-    }
-  });
-  var prevVnode = render1.call(vm1);
-  var el = createElm(prevVnode);
-  document.body.appendChild(el);
-  var render2 = compileToFunction("\n    <ul a='1' style='background:red;list-style: none;'>\n        <li key='d'>d</li> \n        <li key='a'>a</li>\n        <li key='b'>b</li>\n        <li key='c'>c</li>\n    </ul>");
-  var vm2 = new Vue({
-    data: {
-      name: '1111'
-    }
-  });
-  var nextNode = render2.call(vm2);
-  setTimeout(function () {
-    patch(prevVnode, nextNode);
-  }, 1000);
 
   return Vue;
 
