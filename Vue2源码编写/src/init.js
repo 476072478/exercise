@@ -10,15 +10,15 @@
 import { compileToFunction } from "./compiler/index";
 import { initState } from "./state";
 import {mountComponent} from './lifecycle'
-import { initGlobalAPI } from "./globalApi";
+import { mergeOptions } from "./utils";
 export function initMixin(Vue) {
     Vue.prototype._init = function (options) {
         // 用于初始化操作
         const vm = this;
-        vm.$options = options; // 将用户的选项挂载到实例上
+        // debugger
+        vm.$options = mergeOptions(this.constructor.options,options); // 将用户的选项挂载到实例上
         // 初始化状态，初始化计算属性，watcher
         initState(vm);
-        initGlobalAPI(vm)
         // todo...
         if (options.el) {
             vm.$mount(options.el);

@@ -29,8 +29,18 @@
     </div>
     <script src="./vue.js"></script>
     <script>
-        let box = document.querySelector('#box')
-        //  响应式数据变化，数据变化了可以监控
+        // let box = document.querySelector('#box')
+        // //  响应式数据变化，数据变化了可以监控
+        Vue.mixin({
+            created(){
+                console.log(5,4,3)
+            }
+        })
+        Vue.mixin({
+            created(){
+                console.log(5,4,3)
+            }
+        })
         const vm = new Vue({
             data() { //代理数据
                 return {
@@ -39,16 +49,18 @@
                     c: '成都',
                 }
             },
-            computed: {
-                username() {
-                    return this.a.name + this.b
-                }
+            created(){
+                console.log(1,2,3)
             },
+            // computed: {
+            //     username() {
+            //         return this.a.name + this.b
+            //     }
+            // },
             el: '#box',
         })
-        setTimeout(() => {
-            vm.a = '北京'
-        }, 1000);
+        console.log(vm)
+        
     </script>
 </body>
 

@@ -99,6 +99,77 @@
     return typeof key === "symbol" ? key : String(key);
   }
 
+  // 静态方法
+  var strats = {};
+  var LIFECYCLE = ['beforeCreate', 'created'];
+  LIFECYCLE.forEach(function (hook) {
+    return strats[hook] = function (p, c) {
+      // {} {created:function(){}} => {created:[fn]}  第一次合并
+      // {created:[fn]} {created:function(){}} => {created:[fn,fn]}
+      if (c) {
+        // 如果儿子有父亲有，父亲肯定是数组，让父亲和儿子拼在一起
+        if (p) {
+          return p.concat(c);
+        } else {
+          // 第一次，父亲没有，儿子有，将儿子包装成数组
+          return [c];
+        }
+      } else {
+        // 如果儿子没有，直接返回父亲
+        return p;
+      }
+    };
+  });
+  function mergeOptions(parent, child) {
+    var options = {};
+    for (var key in parent) {
+      // 循环老的
+      mergeField(key);
+    }
+    for (var _key in child) {
+      // 循环新的
+      if (!parent.hasOwnProperty(_key)) {
+        mergeField(_key);
+      }
+    }
+    function mergeField(key) {
+      // 策略模式，用策略模式减少if，else
+      if (strats[key]) {
+        options[key] = strats[key](parent[key], child[key]);
+      } else {
+        // 如果不在策略中则以儿子为主
+        options[key] = child[key] || parent[key]; //优先采用儿子，再采用父亲
+      }
+    }
+
+    return options;
+  }
+
+  function initGlobalAPI(Vue) {
+    Vue.options = {};
+    Vue.mixin = function (mixin) {
+      // 我们期望将用户的选项和全局的options进行合并
+      this.options = mergeOptions(this.options, mixin);
+      return this;
+    };
+    Vue.extend = function (options) {
+      function Sub() {
+        var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+        // 最终使用一个组件，就是new一个实例
+        this._init(options); // 默认对子类进行初始化
+      }
+
+      Sub.prototype = Object.create(Vue.prototype); // Sub.prototype._proto_ =  Vue.prototype
+      Sub.prototype.constructor = Sub;
+      Sub.options = options; // 保存用户传递的选项
+      return Sub;
+    };
+    Vue.options.components = {};
+    Vue.component = function (id, definition) {
+      definition = _typeof(definition);
+    };
+  }
+
   // 标签名 a-aaa
   var ncname = "[a-zA-Z_][\\-\\.0-9_a-zA-Z]*";
   // 命名空间标签 aa:aa-xxx
@@ -957,23 +1028,6 @@
     // 观察者模式
   }
 
-  function initGlobalAPI(Vue) {
-    // 静态方法
-    Vue.options = {};
-    Vue.extend = function (options) {
-      function Sub() {
-        this._init_();
-      }
-      Sub.prototype = Object.create(Vue.prototype); //  Sub.prototype._proto_ =  Vue.prototype
-      Sub.options = options; // 保存用户传递的选项
-      return Sub;
-    };
-    Vue.options.components = {};
-    Vue.component = function (id, definition) {
-      definition = _typeof(definition);
-    };
-  }
-
   /*
    * @Author: 小唐 476072478@qq.com
    * @Date: 2023-03-03 09:58:34
@@ -986,10 +1040,10 @@
     Vue.prototype._init = function (options) {
       // 用于初始化操作
       var vm = this;
-      vm.$options = options; // 将用户的选项挂载到实例上
+      // debugger
+      vm.$options = mergeOptions(this.constructor.options, options); // 将用户的选项挂载到实例上
       // 初始化状态，初始化计算属性，watcher
       initState(vm);
-      initGlobalAPI(vm);
       // todo...
       if (options.el) {
         vm.$mount(options.el);
@@ -1025,6 +1079,7 @@
   function Vue(options) {
     this._init(options);
   }
+  initGlobalAPI(Vue);
   initStateMixin(Vue);
   initMixin(Vue); // 扩展了init方法
   lifeCycleMixin(Vue);
