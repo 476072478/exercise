@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "武侯天气",
+  "enablePullDownRefresh": false,
+  "usingComponents": {
+    "login": "/components/login/login"
+  }
+}

@@ -1,0 +1,78 @@
+
+.weather > ._img.data-v-1984e620 {
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: -1;
+}
+.weatherTop.data-v-1984e620 {
+	height: 30vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	color: white;
+}
+.weatherTop .topbox.data-v-1984e620 {
+	padding: 5px 0;
+	display: flex;
+	align-items: center;
+}
+.topbox ._img.data-v-1984e620 {
+	width: 30px;
+	height: 30px;
+}
+.reporttime.data-v-1984e620 {
+	font-size: 24px;
+}
+.weatherCenter.data-v-1984e620 {
+	display: flex;
+	flex-wrap: wrap;
+	color: white;
+}
+.weatherCenter .CenterBox.data-v-1984e620 {
+	width: 33%;
+	height: 15vh;
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	font-size: 12px;
+}
+.weatherCenter ._img.data-v-1984e620 {
+	width: 30px;
+	height: 30px;
+}
+.weatherBottom.data-v-1984e620 {
+	margin-top: 15px;
+	border-top: 1px solid rgb(255, 255, 255, 0.5);
+	display: flex;
+	padding: 0 15px;
+	color: white;
+}
+.bottomBox.data-v-1984e620 {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	justify-content: center;
+	text-align: center;
+	height: 30vh;
+	padding-top: 20px;
+	font-size: 14px;
+	background: rgb(0, 0, 0, 0);
+	transition: all 0.2s linear;
+}
+.boxhandle.data-v-1984e620 {
+	background: rgb(0, 0, 0, 0.5);
+}
+.box_div.data-v-1984e620 {
+	height: 20%;
+}
+.box_div ._img.data-v-1984e620 {
+	width: 30px;
+	height: 30px;
+}
+
