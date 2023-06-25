@@ -698,10 +698,6 @@
         children[_key - 3] = arguments[_key];
       }
       return vnode(vm, tag, data, children, data.key, null);
-    } else {
-      // 创造一个组件的虚拟节点（包含组件的构造函数）
-      var Ctor = vm.$options.component[tag];
-      console.log(Ctor);
     }
   }
   function createTextNode$1(vm, text) {
@@ -971,6 +967,10 @@
       Sub.prototype = Object.create(Vue.prototype); //  Sub.prototype._proto_ =  Vue.prototype
       Sub.options = options; // 保存用户传递的选项
       return Sub;
+    };
+    Vue.options.components = {};
+    Vue.component = function (id, definition) {
+      definition = _typeof(definition);
     };
   }
 
