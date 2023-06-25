@@ -9,4 +9,8 @@ export function initGlobalAPI(Vue){
         Sub.options = options; // 保存用户传递的选项
         return Sub
     }
+    Vue.options.components = {}
+    Vue.component = function(id,definition){
+        definition = typeof definition
+    }
 }

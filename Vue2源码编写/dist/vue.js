@@ -688,12 +688,21 @@
     };
   }
 
+  var isReservedTag = function isReservedTag(tag) {
+    return ['a', 'button', 'p', 'div', 'ul', 'li', 'span'].includes(tag);
+  };
   function createElement(vm, tag) {
     var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-    for (var _len = arguments.length, children = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
-      children[_key - 3] = arguments[_key];
+    if (isReservedTag(tag)) {
+      for (var _len = arguments.length, children = new Array(_len > 3 ? _len - 3 : 0), _key = 3; _key < _len; _key++) {
+        children[_key - 3] = arguments[_key];
+      }
+      return vnode(vm, tag, data, children, data.key, null);
+    } else {
+      // 创造一个组件的虚拟节点（包含组件的构造函数）
+      var Ctor = vm.$options.component[tag];
+      console.log(Ctor);
     }
-    return vnode(vm, tag, data, children, data.key, null);
   }
   function createTextNode$1(vm, text) {
     return vnode(vm, null, null, null, null, text);
