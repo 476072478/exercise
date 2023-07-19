@@ -5,8 +5,8 @@ import { initStateMixin } from "./state";
 function Vue(options) {
     this._init(options);
 }
-initGlobalAPI(Vue)
 initStateMixin(Vue)
 initMixin(Vue); // 扩展了init方法
 lifeCycleMixin(Vue);
+initGlobalAPI(Vue)
 export default Vue;

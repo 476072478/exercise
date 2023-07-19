@@ -9,16 +9,19 @@
 
 import { compileToFunction } from "./compiler/index";
 import { initState } from "./state";
-import {mountComponent} from './lifecycle'
+import { callHook, mountComponent } from './lifecycle'
 import { mergeOptions } from "./utils";
 export function initMixin(Vue) {
     Vue.prototype._init = function (options) {
         // 用于初始化操作
         const vm = this;
-        // debugger
-        vm.$options = mergeOptions(this.constructor.options,options); // 将用户的选项挂载到实例上
+
+        vm.$options = mergeOptions(this.constructor.options, options); // 将用户的选项挂载到实例上
+
+        callHook(vm, 'beforeCreate')
         // 初始化状态，初始化计算属性，watcher
         initState(vm);
+        callHook(vm, 'created')
         // todo...
         if (options.el) {
             vm.$mount(options.el);
@@ -36,17 +39,15 @@ export function initMixin(Vue) {
                 template = el.outerHTML;
             } else {
                 // 写了templat，就用写了的template
-                if(el){
-                    template = ops.template;
-                }
+                template = ops.template;
             }
-            if(template){
+            if (template) {
                 // 这里需要对模板进行编译
                 const render = compileToFunction(template)
                 ops.render = render
             }
         }
         // 将实例挂载到el上
-        mountComponent(vm,el)
+        mountComponent(vm, el)
     };
 }

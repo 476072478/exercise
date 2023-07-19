@@ -6,13 +6,13 @@ import { patch } from "./vdom/patch"
 export function lifeCycleMixin(Vue) {
     Vue.prototype._c = function () {
         // 创造对应的虚拟节点，进行渲染
-        return createElement(this,...arguments)
+        return createElement(this, ...arguments)
     }
     Vue.prototype._v = function () {
-        return createTextNode(this,...arguments)
+        return createTextNode(this, ...arguments)
     }
     Vue.prototype._s = function (value) { //将数据转化成字符串，因为使用变量对应的结果可能是一个对象
-        if(typeof value === 'object' && value !== null){
+        if (typeof value === 'object' && value !== null) {
             return JSON.stringify(value)
         }
         return value
@@ -29,11 +29,11 @@ export function lifeCycleMixin(Vue) {
         const el = vm.$el
         const prevVnode = vm._vnode
         vm._vnode = vnode //把组件第一次产生的虚拟节点保存到_vnode上
-        if(prevVnode){
+        if (prevVnode) {
             // 之前渲染过了
-            vm.$el = patch(prevVnode,vnode)
-        }else{
-            vm.$el = patch(el,vnode)
+            vm.$el = patch(prevVnode, vnode)
+        } else {
+            vm.$el = patch(el, vnode)
         }
     }
 }
@@ -45,7 +45,16 @@ export function mountComponent(vm, el) {
         // 需要调用生成的render函数获取到虚拟节点 -》 生成真实的dom
         vm._update(vm._render())
     }
-    new Watcher(vm,updataComponent,true) 
+    new Watcher(vm, updataComponent, true)
     //如果稍后数据变化，也调用这个函数重新执行
     // 观察者模式
+}
+export function callHook(vm, hook) {
+    // 调用钩子函数
+    const handlers = vm.$options[hook]
+    if (handlers) {
+        handlers.forEach(handler => {
+            handler.call(vm)
+        });
+    }
 }

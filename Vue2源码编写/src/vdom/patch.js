@@ -1,9 +1,22 @@
 import { isSameVnode } from "./index";
 
+function createComponent(vnode) {
+    let i = vnode.data
+    if ((i = i.hook) && (i = i.init)) {
+        i(vnode) //初始化组件
+    }
+    console.log('🚀 ~ file ~ text:',vnode)
+    if(vnode.componentInstance){
+        return true
+    }
+}
 export function createElm(vnode) {
     let { tag, data, children, text } = vnode;
     if (typeof tag === "string") {
-        //元素
+        // 创建真实元素 也要区分是组件还是元素
+        if (createComponent(vnode)) { //组件
+            return vnode.componentInstance.$el
+        }
         vnode.el = document.createElement(tag); //后续我们需要diff算法，拿虚拟节点比对后更新dom
         patchProps(vnode.el, {}, data);
         children.forEach((children) => {
@@ -41,6 +54,9 @@ function patchProps(el, oldprops = {}, props = {}) {
     }
 }
 export function patch(oldVnode, vnode) {
+    if(!oldVnode){ // 这就是组件的挂载
+        return createElm(vnode) // vm.$el 对应的就是组件渲染的结果
+    }
     const isRealElement = oldVnode && oldVnode.nodeType; // 如果有说明他是一个元素
     if (isRealElement) {
         const oldElm = oldVnode;
