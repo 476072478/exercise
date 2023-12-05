@@ -17,29 +17,54 @@
 
 <body>
     <div id="box" class="mybox">
-        
+
     </div>
-    <script src="./vue.js"></script>
+    <!-- <script src="./vue.js"></script> -->
     <script>
-        Vue.component('my-button',{
-            template:'<button>全局buton</button>'
-        })
-        // 在模板渲染的时候需要查找my-button组件
-        let Sub = Vue.extend({
-            template:'<button>子组件<my-button></my-button></button>',
-            components:{
-                'my-button':{
-                    template:'<button>局部button</button>'
-                }
-            },
-            data(){
-                return {
-                    a:1231
+        // Vue.component('my-button',{
+        //     template:'<button>全局buton</button>'
+        // })
+        // // 在模板渲染的时候需要查找my-button组件
+        // let Sub = Vue.extend({
+        //     template:'<button>子组件<my-button></my-button></button>',
+        //     components:{
+        //         'my-button':{
+        //             template:'<button>局部button</button>'
+        //         }
+        //     },
+        //     data(){
+        //         return {
+        //             a:1231
+        //         }
+        //     }
+        // })
+        // new Sub().$mount('#box')
+        var minMutation = function (startGene, endGene, bank) {
+            startGene = startGene.split('')
+            let num = 0
+            for (let i = 0; i < startGene.length; i++) {
+                if(startGene[i] === endGene.charAt(i)){
+                    continue
+                }else{
+                    let flag = false
+                    let oldCharAt = startGene[i]
+                    startGene[i] = endGene.charAt(i)
+                    for(let j = 0 ; j < bank.length ;j++){
+                        if(startGene.join('')  === bank[j]){
+                            num++
+                            flag = true
+                            continue
+                        }
+                    }
+                    if(!flag){
+                        startGene[i] == oldCharAt
+                    }
                 }
             }
-        })
-        new Sub().$mount('#box')
+            return num
+        };
+        console.log('🚀 ~ file ~ text:',minMutation("AACCGGTT","AAACGGTA",["AACCGGTA","AACCGCTA","AAACGGTA"]))
     </script>
 </body>
 
-</html>                                                                    
+</html>
