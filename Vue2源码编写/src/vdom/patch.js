@@ -95,7 +95,7 @@ function patchVonde(oldVnode, vnode) {
         return
     }
     // console.log(oldVnode, vnode)
-    // 是标签 标签我们需要比对标签的属性
+    //是标签  标签我们需要比对标签的属性
     patchProps(el, oldVnode.data, vnode.data)
 
     // 比较儿子节点，一方有儿子，一方没儿子

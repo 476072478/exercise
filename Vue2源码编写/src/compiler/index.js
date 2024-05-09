@@ -17,7 +17,7 @@ function parseHTML(html) {
     function advance(n) {
         html = html.substring(n);
     }
-    let root //树的操作，需要根据开始标签和结束标签产生一个树
+    let root // 树的操作，需要根据开始标签和结束标签产生一个树
     // 如何构建树的父子关系
     let stack = []
     function creatASTElement(tagName, attrs) {
@@ -36,7 +36,7 @@ function parseHTML(html) {
         }
         let parent = stack[stack.length - 1]
         if (parent) {
-            element.parent = parent //让这个元素记住自己的父亲
+            element.parent = parent // 让这个元素记住自己的父亲
             parent.children.push(element) // 让这个元素记住自己的儿子
         }
         stack.push(element)

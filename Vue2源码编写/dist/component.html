@@ -39,31 +39,38 @@
         //     }
         // })
         // new Sub().$mount('#box')
-        var minMutation = function (startGene, endGene, bank) {
-            startGene = startGene.split('')
-            let num = 0
-            for (let i = 0; i < startGene.length; i++) {
-                if(startGene[i] === endGene.charAt(i)){
-                    continue
-                }else{
-                    let flag = false
-                    let oldCharAt = startGene[i]
-                    startGene[i] = endGene.charAt(i)
-                    for(let j = 0 ; j < bank.length ;j++){
-                        if(startGene.join('')  === bank[j]){
-                            num++
-                            flag = true
-                            continue
-                        }
-                    }
-                    if(!flag){
-                        startGene[i] == oldCharAt
-                    }
-                }
-            }
-            return num
-        };
-        console.log('🚀 ~ file ~ text:',minMutation("AACCGGTT","AAACGGTA",["AACCGGTA","AACCGCTA","AAACGGTA"]))
+        // var minMutation = function (startGene, endGene, bank) {
+        //     startGene = startGene.split('')
+        //     let num = 0
+        //     for (let i = 0; i < startGene.length; i++) {
+        //         if(startGene[i] === endGene.charAt(i)){
+        //             continue
+        //         }else{
+        //             let flag = false
+        //             let oldCharAt = startGene[i]
+        //             startGene[i] = endGene.charAt(i)
+        //             for(let j = 0 ; j < bank.length ;j++){
+        //                 if(startGene.join('')  === bank[j]){
+        //                     num++
+        //                     flag = true
+        //                     continue
+        //                 }
+        //             }
+        //             if(!flag){
+        //                 startGene[i] == oldCharAt
+        //             }
+        //         }
+        //     }
+        //     return num
+        // };
+        // console.log('🚀 ~ file ~ text:',minMutation("AACCGGTT","AAACGGTA",["AACCGGTA","AACCGCTA","AAACGGTA"]))
+
+
+        let obj = { a: 1 }
+        let key = { b: 2 }
+        let ceshi = new Map()
+        ceshi.set(obj, key)
+        console.log('🚀 ~ file ~ text:', ceshi.get(obj))
     </script>
 </body>
 

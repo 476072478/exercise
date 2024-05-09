@@ -8,7 +8,7 @@ export default class Dep{
         // 这里我们不希望放重复的wacher，而且刚才只是一个单向的关系
         // watcher记录dep
         // this.subs.push(Dep.target)
-        Dep.target.addDep(this)  //让watcher记住dep
+        Dep.target.addDep(this)  // 让watcher记住dep
     }
     addSub(watcher){
         this.subs.push(watcher)
