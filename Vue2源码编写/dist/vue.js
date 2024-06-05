@@ -205,7 +205,7 @@
       function advance(n) {
         html = html.substring(n);
       }
-      var root; //树的操作，需要根据开始标签和结束标签产生一个树
+      var root; // 树的操作，需要根据开始标签和结束标签产生一个树
       // 如何构建树的父子关系
       var stack = [];
       function creatASTElement(tagName, attrs) {
@@ -224,7 +224,7 @@
         }
         var parent = stack[stack.length - 1];
         if (parent) {
-          element.parent = parent; //让这个元素记住自己的父亲
+          element.parent = parent; // 让这个元素记住自己的父亲
           parent.children.push(element); // 让这个元素记住自己的儿子
         }
 
@@ -416,7 +416,7 @@
           // 这里我们不希望放重复的wacher，而且刚才只是一个单向的关系
           // watcher记录dep
           // this.subs.push(Dep.target)
-          Dep.target.addDep(this); //让watcher记住dep
+          Dep.target.addDep(this); // 让watcher记住dep
         }
       }, {
         key: "addSub",
@@ -842,7 +842,6 @@
         i(vnode); //初始化组件
       }
 
-      console.log('🚀 ~ file ~ text:', vnode);
       if (vnode.componentInstance) {
         return true;
       }
@@ -945,7 +944,7 @@
         return;
       }
       // console.log(oldVnode, vnode)
-      // 是标签 标签我们需要比对标签的属性
+      //是标签  标签我们需要比对标签的属性
       patchProps(el, oldVnode.data, vnode.data);
 
       // 比较儿子节点，一方有儿子，一方没儿子
@@ -1084,6 +1083,7 @@
       };
     }
     function mountComponent(vm, el) {
+      debugger;
       //实现页面的挂载流程
       // 先将el挂载到实例上
       vm.$el = el;

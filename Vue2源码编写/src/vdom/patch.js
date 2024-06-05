@@ -5,7 +5,6 @@ function createComponent(vnode) {
     if ((i = i.hook) && (i = i.init)) {
         i(vnode) //初始化组件
     }
-    console.log('🚀 ~ file ~ text:',vnode)
     if(vnode.componentInstance){
         return true
     }

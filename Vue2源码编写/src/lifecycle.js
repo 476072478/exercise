@@ -38,6 +38,7 @@ export function lifeCycleMixin(Vue) {
     }
 }
 export function mountComponent(vm, el) {
+    debugger
     //实现页面的挂载流程
     // 先将el挂载到实例上
     vm.$el = el

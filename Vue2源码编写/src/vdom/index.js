@@ -23,7 +23,7 @@ function createComponentVnode(vm, tag, key, data, children, Ctor) {
         Ctor = vm.$options._base.extend(Ctor)
     }
     data.hook = {
-        init(vnode){
+        init(vnode) {
             // 稍后创造真实节点的时候，如果是组件则调用此init方法
             // 保存组件的实例到虚拟节点上
             let instance = vnode.componentInstance = new vnode.componentOptions.Ctor
